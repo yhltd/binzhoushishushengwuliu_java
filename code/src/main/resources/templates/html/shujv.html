@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数据表</title>
+    <link rel="shortcut icon" href="#"/>
+
+    <script type="text/javascript" src="../js/Jquery.js"></script>
+    <script type="text/javascript" src="../js/jquerysession.js"></script>
+
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/icons/bootstrap-icons.css">
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap.min.js"></script>
+
+    <!--bootstrap-table-->
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/css/bootstrap-table.css">
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table-zh-CN.min.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/colResizable-1.6.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table-resizable.js"></script>
+
+    <link rel="stylesheet" href="../css/main.css">
+    <script type="text/javascript" src="../js/main.js"></script>
+    <script type="text/javascript" src="../js/shujv.js"></script>
+    <script type="text/javascript" src="../js/tableExport.js"></script>
+</head>
+
+<body class="pt-2">
+<div class="top-toolbar row">
+    <div class="col-md-3 mb-2">
+        <input id="ks" type="date" class="form-control" autocomplete="off">
+    </div>
+    <div class="col-md-3 mb-2">
+        <input id="js" type="date" class="form-control" autocomplete="off">
+    </div>
+    <div class="col-md-3 mb-2">
+        <input id="chetou" type="text" class="form-control" placeholder="车头" autocomplete="off">
+    </div>
+    <div class="col-md-2 mb-2">
+        <button id="select-btn" class="btn btn-primary">
+            <i class="bi bi-search icon"></i>
+            查询
+        </button>
+    </div>
+</div>
+
+<div id="table-toolbar">
+    <div class="btn-group" role="group">
+        <button id="refresh-btn" class="btn btn-primary">
+            <i class="bi bi-arrow-clockwise icon"></i>
+            刷新
+        </button>
+        <button id="add-btn" class="btn btn-primary">
+            <i class="bi bi-plus-square icon"></i>
+            新增
+        </button>
+        <button id="update-btn" class="btn btn-primary">
+            <i class="bi bi-pencil-square icon"></i>
+            修改
+        </button>
+        <button id="delete-btn" class="btn btn-primary">
+            <i class="bi bi-trash icon"></i>
+            删除
+        </button>
+        <button id="export-btn" class="btn btn-primary"
+                onClick="$('#shujvTable').tableExport({ type: 'excel', escape: 'false' })">
+            <i class="bi bi-file-earmark-spreadsheet"></i>
+            导出Excel
+        </button>
+        <a class="btn btn-primary" style="color: white;padding-top: 8px">当前页：数据表</a>
+    </div>
+</div>
+
+<div class="table-div border-top">
+    <table id="shujvTable"></table>
+</div>
+
+<div id="add-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">录入</div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form id="add-form" class="needs-validation">
+                    <div class="form-group">
+                        <label for="add-thRiqi">提货日期</label>
+                        <input id="add-thRiqi" name="thRiqi" type="date" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-xhRiqi">卸货日期</label>
+                        <input id="add-xhRiqi" name="xhRiqi" type="date" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label id="add-label-chetou">车头(点击此处可以单选)</label>
+                        <input id="add-chetou" name="chetou" type="text" class="form-control" autocomplete="off"
+                               data-required="1" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-guache">挂车</label>
+                        <input id="add-guache" name="guache" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-zhujia">主驾</label>
+                        <input id="add-zhujia" name="zhujia" type="text" class="form-control" autocomplete="off"
+                               data-required="1" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-fujia">副驾</label>
+                        <input id="add-fujia" name="fujia" type="text" class="form-control" autocomplete="off"
+                               data-required="1" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-phone">电话号码</label>
+                        <input id="add-phone" name="phone" type="text" class="form-control" autocomplete="off"
+                               data-required="1" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-kehu">客户</label>
+                        <input id="add-kehu" name="kehu" type="text" class="form-control" autocomplete="off"
+                               data-required="1" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-chuchang">出厂/起</label>
+                        <input id="add-chuchang" name="chuchang" type="text" class="form-control" autocomplete="off"
+                               data-required="1" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-ruchang">入场/止</label>
+                        <input id="add-ruchang" name="ruchang" type="text" class="form-control" autocomplete="off"
+                               data-required="1" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-item">品名</label>
+                        <input id="add-item" name="item" type="text" class="form-control" autocomplete="off"
+                               data-required="1" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-thNum">提货数量</label>
+                        <input id="add-thNum" name="thNum" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-shNum">收货数量</label>
+                        <input id="add-shNum" name="shNum" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-licheng">总里程</label>
+                        <input id="add-licheng" name="licheng" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-btLicheng">本趟里程</label>
+                        <input id="add-btLicheng" name="btLicheng" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-bcJiayou">本次加油</label>
+                        <input id="add-bcJiayou" name="bcJiayou" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-baidunyouhao">百吨油耗</label>
+                        <input id="add-baidunyouhao" name="baidunyouhao" type="number" class="form-control"
+                               autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-niaosu">尿素</label>
+                        <input id="add-niaosu" name="niaosu" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-bangfei">磅费</label>
+                        <input id="add-bangfei" name="bangfei" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-etc">ETC</label>
+                        <input id="add-etc" name="etc" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-xianjin">现金</label>
+                        <input id="add-xianjin" name="xianjin" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-xiulifei">修理费</label>
+                        <input id="add-xiulifei" name="xiulifei" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-xiche">洗车</label>
+                        <input id="add-xiche" name="xiche" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-jiashui">加水</label>
+                        <input id="add-jiashui" name="jiashui" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-chefei">车费</label>
+                        <input id="add-chefei" name="chefei" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-tingche">停车</label>
+                        <input id="add-tingche" name="tingche" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-zhusu">住宿</label>
+                        <input id="add-zhusu" name="zhusu" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-zafei">杂费</label>
+                        <input id="add-zafei" name="zafei" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-shenghuofei">生活费</label>
+                        <input id="add-shenghuofei" name="shenghuofei" type="number" class="form-control"
+                               autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-yunfei">运费</label>
+                        <input id="add-yunfei" name="yunfei" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-jiaojingfakuan">交警罚款</label>
+                        <input id="add-jiaojingfakuan" name="jiaojingfakuan" type="number" class="form-control"
+                               autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-shoufeizhan">收费站</label>
+                        <input id="add-shoufeizhan" name="shoufeizhan" type="text" class="form-control"
+                               autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-beizhu">备注</label>
+                        <input id="add-beizhu" name="beizhu" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                </form>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="add-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    提交
+                </button>
+                <button id="add-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="update-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">编辑</div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="update-form" class="needs-validation">
+                    <div class="form-group">
+                        <input id="id" name="id" type="hidden">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-thRiqi">提货日期</label>
+                        <input id="update-thRiqi" name="thRiqi" type="date" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-xhRiqi">卸货日期</label>
+                        <input id="update-xhRiqi" name="xhRiqi" type="date" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label id="update-label-chetou">车头(点击此处可以单选)</label>
+                        <input id="update-chetou" name="chetou" type="text" class="form-control" autocomplete="off"
+                               data-required="1" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-guache">挂车</label>
+                        <input id="update-guache" name="guache" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-zhujia">主驾</label>
+                        <input id="update-zhujia" name="zhujia" type="text" class="form-control" autocomplete="off"
+                               data-required="1" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-fujia">副驾</label>
+                        <input id="update-fujia" name="fujia" type="text" class="form-control" autocomplete="off"
+                               data-required="1" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-phone">电话号码</label>
+                        <input id="update-phone" name="phone" type="text" class="form-control" autocomplete="off"
+                               data-required="1" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-kehu">客户</label>
+                        <input id="update-kehu" name="kehu" type="text" class="form-control" autocomplete="off"
+                               data-required="1" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-chuchang">出厂/起</label>
+                        <input id="update-chuchang" name="chuchang" type="text" class="form-control" autocomplete="off"
+                               data-required="1" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-ruchang">入场/止</label>
+                        <input id="update-ruchang" name="ruchang" type="text" class="form-control" autocomplete="off"
+                               data-required="1" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-item">品名</label>
+                        <input id="update-item" name="item" type="text" class="form-control" autocomplete="off"
+                               data-required="1" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-thNum">提货数量</label>
+                        <input id="update-thNum" name="thNum" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-shNum">收货数量</label>
+                        <input id="update-shNum" name="shNum" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-licheng">总里程</label>
+                        <input id="update-licheng" name="licheng" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-btLicheng">本趟里程</label>
+                        <input id="update-btLicheng" name="btLicheng" type="number" class="form-control"
+                               autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-bcJiayou">本次加油</label>
+                        <input id="update-bcJiayou" name="bcJiayou" type="number" class="form-control"
+                               autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-baidunyouhao">百吨油耗</label>
+                        <input id="update-baidunyouhao" name="baidunyouhao" type="number" class="form-control"
+                               autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-niaosu">尿素</label>
+                        <input id="update-niaosu" name="niaosu" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-bangfei">磅费</label>
+                        <input id="update-bangfei" name="bangfei" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-etc">ETC</label>
+                        <input id="update-etc" name="etc" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-xianjin">现金</label>
+                        <input id="update-xianjin" name="xianjin" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-xiulifei">修理费</label>
+                        <input id="update-xiulifei" name="xiulifei" type="number" class="form-control"
+                               autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-xiche">洗车</label>
+                        <input id="update-xiche" name="xiche" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-jiashui">加水</label>
+                        <input id="update-jiashui" name="jiashui" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-chefei">车费</label>
+                        <input id="update-chefei" name="chefei" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-tingche">停车</label>
+                        <input id="update-tingche" name="tingche" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-zhusu">住宿</label>
+                        <input id="update-zhusu" name="zhusu" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-zafei">杂费</label>
+                        <input id="update-zafei" name="zafei" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-shenghuofei">生活费</label>
+                        <input id="update-shenghuofei" name="shenghuofei" type="number" class="form-control"
+                               autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-yunfei">运费</label>
+                        <input id="update-yunfei" name="yunfei" type="number" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-jiaojingfakuan">交警罚款</label>
+                        <input id="update-jiaojingfakuan" name="jiaojingfakuan" type="number" class="form-control"
+                               autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-shoufeizhan">收费站</label>
+                        <input id="update-shoufeizhan" name="shoufeizhan" type="text" class="form-control"
+                               autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-beizhu">备注</label>
+                        <input id="update-beizhu" name="beizhu" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                </form>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="update-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    提交
+                </button>
+                <button id="update-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="delete-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">提示</div>
+            </div>
+            <div id="delete-modal-body" class="modal-body">
+                确定删除吗？
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="delete-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    确定
+                </button>
+                <button id="delete-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    取消
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--    查询车牌组合信息窗体-->
+<div id="show-combination-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg" style="max-width: 1200px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">选择</div>
+            </div>
+            <div class="modal-body" style="max-height: 450px">
+                <table id="show-table-combination"></table>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="combination-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    确定
+                </button>
+                <button id="combination-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--    查询客户窗体-->
+<div id="show-kehu-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg" style="max-width: 1200px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">选择</div>
+            </div>
+            <div class="modal-body" style="max-height: 450px">
+                <table id="show-table-kehu"></table>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="kehu-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    确定
+                </button>
+                <button id="kehu-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--    查询地址窗体-->
+<div id="show-address-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg" style="max-width: 1200px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">选择</div>
+            </div>
+            <div class="modal-body" style="max-height: 450px">
+                <table id="show-table-address"></table>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="address-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    确定
+                </button>
+                <button id="address-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--    查询产品窗体-->
+<div id="show-product-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg" style="max-width: 1200px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">选择</div>
+            </div>
+            <div class="modal-body" style="max-height: 450px">
+                <table id="show-table-product"></table>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="product-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    确定
+                </button>
+                <button id="product-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--    查询司机窗体-->
+<div id="show-driver-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg" style="max-width: 1200px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">选择</div>
+            </div>
+            <div class="modal-body" style="max-height: 450px">
+                <table id="show-table-driver"></table>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="driver-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    确定
+                </button>
+                <button id="driver-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--    车辆-->
+<div id="show-vehicle-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg" style="max-width: 1200px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">选择</div>
+            </div>
+            <div class="modal-body" style="max-height: 450px">
+                <table id="show-table-vehicle"></table>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="vehicle-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    确定
+                </button>
+                <button id="vehicle-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--    文件-->
+<div id="show-file-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">查看</div>
+            </div>
+            <div class="modal-body">
+                <table id="show-table-file"></table>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="file-up-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    上传文件
+                </button>
+                <button id="file-down-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-down icon"></i>
+                    下载文件
+                </button>
+                <button id="file-del-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-trash icon"></i>
+                    删除文件
+                </button>
+                <button id="file-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--    文件-->
+<div id="up-file-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">查看</div>
+            </div>
+            <div class="modal-body">
+                <label for="filename">文件名</label>
+                <input id="filename" type="text" class="form-control" autocomplete="off">
+                <input id="file" type="file" hidden="hidden">
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="file-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    选择文件
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- loading -->
+<div class="modal" id="loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop='static'>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">提示</h4>
+            </div>
+            <div class="modal-body">
+                上传文件中，请稍候...<span id="result"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>司机信息</title>
+    <link rel="shortcut icon" href="#"/>
+
+    <script type="text/javascript" src="../js/Jquery.js"></script>
+    <script type="text/javascript" src="../js/jquerysession.js"></script>
+
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/icons/bootstrap-icons.css">
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap.min.js"></script>
+
+    <!--bootstrap-table-->
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/css/bootstrap-table.css">
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table-zh-CN.min.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/colResizable-1.6.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table-resizable.js"></script>
+
+    <link rel="stylesheet" href="../css/main.css">
+    <script type="text/javascript" src="../js/main.js"></script>
+    <script type="text/javascript" src="../js/driver.js"></script>
+</head>
+
+<body class="pt-2">
+<div class="top-toolbar row">
+    <div class="col-md-3 mb-2">
+        <input id="name" type="text" class="form-control" placeholder="姓名" autocomplete="off">
+    </div>
+    <div class="col-md-3 mb-2">
+        <input id="chepai" type="text" class="form-control" placeholder="车牌" autocomplete="off">
+    </div>
+    <div class="col-md-2 mb-2">
+        <button id="select-btn" class="btn btn-primary">
+            <i class="bi bi-search icon"></i>
+            查询
+        </button>
+    </div>
+</div>
+
+<div id="table-toolbar">
+    <div class="btn-group" role="group">
+        <button id="refresh-btn" class="btn btn-primary">
+            <i class="bi bi-arrow-clockwise icon"></i>
+            刷新
+        </button>
+        <button id="add-btn" class="btn btn-primary">
+            <i class="bi bi-plus-square icon"></i>
+            新增
+        </button>
+        <button id="update-btn" class="btn btn-primary">
+            <i class="bi bi-pencil-square icon"></i>
+            修改
+        </button>
+        <button id="delete-btn" class="btn btn-primary">
+            <i class="bi bi-trash icon"></i>
+            删除
+        </button>
+        <a class="btn btn-primary" style="color: white;padding-top: 8px">当前页：司机信息</a>
+    </div>
+</div>
+<input type="file" id="file" hidden="hidden">
+
+<div class="table-div border-top">
+    <table id="driverTable"></table>
+</div>
+
+<div id="add-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">录入</div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form id="add-form" class="needs-validation">
+                    <div class="form-group">
+                        <label for="add-no">驾驶员编号</label>
+                        <input id="add-no" name="no" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-name">姓名</label>
+                        <input id="add-name" name="name" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-sex">性别</label>
+                        <select id="add-sex" name="sex" class="form-control" data-required="1">
+                            <option value="男">男</option>
+                            <option value="女">女</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-birth">出生日期</label>
+                        <input id="add-birth" name="birth" type="date" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-idNo">身份证号</label>
+                        <input id="add-idNo" name="idNo" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-jiashizhenghao">驾驶证号</label>
+                        <input id="add-jiashizhenghao" name="jiashizhenghao" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-jiashizhengbianhao">驾驶证编号</label>
+                        <input id="add-jiashizhengbianhao" name="jiashizhengbianhao" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-zhunjiachexing">准驾车型</label>
+                        <input id="add-zhunjiachexing" name="zhunjiachexing" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-chepai">车牌</label>
+                        <input id="add-chepai" name="chepai" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-phone">联系电话</label>
+                        <input id="add-phone" name="phone" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-address">家庭住址</label>
+                        <input id="add-address" name="address" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                </form>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="add-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    提交
+                </button>
+                <button id="add-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="update-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">编辑</div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="update-form" class="needs-validation">
+                    <div class="form-group">
+                        <input id="id" name="id" type="hidden">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-no">驾驶员编号</label>
+                        <input id="update-no" name="no" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-name">姓名</label>
+                        <input id="update-name" name="name" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-sex">性别</label>
+                        <select id="update-sex" name="sex" class="form-control" data-required="1">
+                            <option value="男">男</option>
+                            <option value="女">女</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-birth">出生日期</label>
+                        <input id="update-birth" name="birth" type="date" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-idNo">身份证号</label>
+                        <input id="update-idNo" name="idNo" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-jiashizhenghao">驾驶证号</label>
+                        <input id="update-jiashizhenghao" name="jiashizhenghao" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-jiashizhengbianhao">驾驶证编号</label>
+                        <input id="update-jiashizhengbianhao" name="jiashizhengbianhao" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-zhunjiachexing">准驾车型</label>
+                        <input id="update-zhunjiachexing" name="zhunjiachexing" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-chepai">车牌</label>
+                        <input id="update-chepai" name="chepai" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-phone">联系电话</label>
+                        <input id="update-phone" name="phone" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-address">家庭住址</label>
+                        <input id="update-address" name="address" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                </form>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="update-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    提交
+                </button>
+                <button id="update-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="delete-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">提示</div>
+            </div>
+            <div id="delete-modal-body" class="modal-body">
+                确定删除吗？
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="delete-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    确定
+                </button>
+                <button id="delete-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    取消
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- loading -->
+<div class="modal" id="loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop='static'>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">提示</h4>
+            </div>
+            <div class="modal-body">
+                上传文件中，请稍候...<span id="result"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

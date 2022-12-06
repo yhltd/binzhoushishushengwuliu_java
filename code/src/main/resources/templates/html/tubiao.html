@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数据表</title>
+    <link rel="shortcut icon" href="#"/>
+
+    <script type="text/javascript" src="../js/Jquery.js"></script>
+    <script type="text/javascript" src="../js/jquerysession.js"></script>
+
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/icons/bootstrap-icons.css">
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap.min.js"></script>
+
+    <!--bootstrap-table-->
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/css/bootstrap-table.css">
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table-zh-CN.min.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/colResizable-1.6.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table-resizable.js"></script>
+
+    <link rel="stylesheet" href="../css/main.css">
+    <script type="text/javascript" src="../js/main.js"></script>
+    <script type="text/javascript" src="../js/shujv.js"></script>
+    <script type="text/javascript" src="../js/echarts.js"></script>
+</head>
+
+<body class="pt-2">
+<div class="top-toolbar row">
+    <div class="col-md-3 mb-2">
+        <input id="ks" type="date" class="form-control" autocomplete="off">
+    </div>
+    <div class="col-md-3 mb-2">
+        <input id="js" type="date" class="form-control" autocomplete="off">
+    </div>
+    <div class="col-md-3 mb-2">
+        <input id="chepai" type="text" class="form-control" placeholder="车头" autocomplete="off">
+    </div>
+    <div class="col-md-2 mb-2">
+        <button id="select-btn" class="btn btn-primary">
+            <i class="bi bi-search icon"></i>
+            查询
+        </button>
+    </div>
+</div>
+
+<div id="table-toolbar">
+    <div class="btn-group" role="group">
+        <a class="btn btn-primary" style="color: white;padding-top: 8px">当前页：图表</a>
+    </div>
+</div>
+
+<div id="chart1" style="width:950px;height:600px;margin-top:1%"></div>
+
+</body>
+<script type="text/javascript">
+    $(function () {
+
+        $('#select-btn').click(function () {
+            var chepai = $('#chepai').val();
+            var ks = $('#ks').val();
+            var js = $('#js').val();
+            $ajax({
+                type: 'post',
+                url: '/shujv/getTubiao',
+                data: {
+                    chepai: chepai,
+                    ks: ks,
+                    js: js,
+                }
+            }, true, '', function (res) {
+                if (res.code == 200) {
+                    var chart1_1 = [];
+                    var chart1_2 = [];
+                    chart1_1.push(res.data[0].licheng);
+                    chart1_2.push(res.data[0].bcJiayou);
+
+                    var myChart = echarts.init(document.getElementById('chart1'));
+                    // 指定图表的配置项和数据
+                    var option = {
+                        title: {
+                            text: '运输账单'
+                        },
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'shadow'
+                            }
+                        },
+                        legend: {
+                            top: '5%',
+                            data: ['里程', '加油']
+                        },
+                        xAxis: {
+                            type: 'category',
+                            axisTick: {show: false},
+                            data: ['数据统计']
+                        },
+                        yAxis: [
+                            {
+                                type: 'value'
+                            }
+                        ],
+                        series: [
+                            {
+                                name: '里程',
+                                type: 'bar',
+                                data: chart1_1,
+                                barGap: 0,
+                                emphasis: {
+                                    focus: 'series'
+                                },
+                                backgroundStyle: {
+                                    color: 'rgba(180, 180, 180, 0.2)'
+                                }
+                            }, {
+                                name: '加油',
+                                type: 'bar',
+                                data: chart1_2,
+                                barGap: 0,
+                                emphasis: {
+                                    focus: 'series'
+                                },
+                                backgroundStyle: {
+                                    color: 'rgba(180, 180, 180, 0.2)'
+                                }
+                            }
+                        ]
+                    };
+                    // 使用刚指定的配置项和数据显示图表。
+                    myChart.setOption(option);
+
+                }
+            });
+
+
+        });
+
+    });
+
+
+</script>
+</html>

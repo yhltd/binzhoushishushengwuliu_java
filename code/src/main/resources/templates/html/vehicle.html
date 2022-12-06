@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>车辆信息管理</title>
+    <link rel="shortcut icon" href="#"/>
+
+    <script type="text/javascript" src="../js/Jquery.js"></script>
+    <script type="text/javascript" src="../js/jquerysession.js"></script>
+
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/icons/bootstrap-icons.css">
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap.min.js"></script>
+
+    <!--bootstrap-table-->
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/css/bootstrap-table.css">
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table-zh-CN.min.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/colResizable-1.6.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table-resizable.js"></script>
+
+    <link rel="stylesheet" href="../css/main.css">
+    <script type="text/javascript" src="../js/main.js"></script>
+    <script type="text/javascript" src="../js/vehicle.js"></script>
+</head>
+
+<body class="pt-2">
+<div class="top-toolbar row">
+    <div class="col-md-3 mb-2">
+        <input id="value" type="text" class="form-control" placeholder="车牌" autocomplete="off">
+    </div>
+    <div class="col-md-2 mb-2">
+        <button id="select-btn" class="btn btn-primary">
+            <i class="bi bi-search icon"></i>
+            查询
+        </button>
+    </div>
+</div>
+
+<div id="table-toolbar">
+    <div class="btn-group" role="group">
+        <button id="refresh-btn" class="btn btn-primary">
+            <i class="bi bi-arrow-clockwise icon"></i>
+            刷新
+        </button>
+        <button id="add-btn" class="btn btn-primary">
+            <i class="bi bi-plus-square icon"></i>
+            新增
+        </button>
+        <button id="update-btn" class="btn btn-primary">
+            <i class="bi bi-pencil-square icon"></i>
+            修改
+        </button>
+        <button id="delete-btn" class="btn btn-primary">
+            <i class="bi bi-trash icon"></i>
+            删除
+        </button>
+        <a class="btn btn-primary" style="color: white;padding-top: 8px">当前页：车辆信息管理</a>
+    </div>
+</div>
+<input type="file" id="file" hidden="hidden">
+
+<div class="table-div border-top">
+    <table id="vehicleTable"></table>
+</div>
+
+<div id="add-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">录入</div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="add-form" class="needs-validation">
+                    <div class="form-group">
+                        <label for="add-chepai">车牌</label>
+                        <input id="add-chepai" name="chepai" type="text" class="form-control" autocomplete="off">
+                        <div class="invalid-feedback">
+                            请输入车牌！
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-cheduiNo">车队编号</label>
+                        <input id="add-cheduiNo" name="cheduiNo" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-fileNo">档案号</label>
+                        <input id="add-fileNo" name="fileNo" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-gouruRiqi">购入日期</label>
+                        <input id="add-gouruRiqi" name="gouruRiqi" type="date" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-goumaiJiage">购买价格</label>
+                        <input id="add-goumaiJiage" name="goumaiJiage" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-factory">汽车厂家</label>
+                        <input id="add-factory" name="factory" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-gongli">初始公里数</label>
+                        <input id="add-gongli" name="gongli" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-youhao">耗油量</label>
+                        <input id="add-youhao" name="youhao" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-phone">联系电话</label>
+                        <input id="add-phone" name="phone" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-carType">车辆类型</label>
+                        <input id="add-carType" name="carType" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-carBrand">车辆品牌</label>
+                        <input id="add-carBrand" name="carBrand" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-carModel">车辆型号</label>
+                        <input id="add-carModel" name="carModel" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-carColor">车身颜色</label>
+                        <input id="add-carColor" name="carColor" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-chejiahao">车架号</label>
+                        <input id="add-chejiahao" name="chejiahao" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-chegoushuihao">车购税号</label>
+                        <input id="add-chegoushuihao" name="chegoushuihao" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-guochanJinkou">国产或进口</label>
+                        <select id="add-guochanJinkou" name="guochanJinkou" class="form-control" autocomplete="off" data-required="1">
+                            <option value="国产">国产</option>
+                            <option value="进口">进口</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-fadongjihao">发动机号</label>
+                        <input id="add-fadongjihao" name="fadongjihao" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-fadongjixinghao">发动机型号</label>
+                        <input id="add-fadongjixinghao" name="fadongjixinghao" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-ranliao">燃料种类</label>
+                        <input id="add-ranliao" name="ranliao" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-pailiang">排量及功率</label>
+                        <input id="add-pailiang" name="pailiang" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-zhizaochang">制造厂名称</label>
+                        <input id="add-zhizaochang" name="zhizaochang" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-lunjv">轮距</label>
+                        <input id="add-lunjv" name="lunjv" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-luntaishu">轮胎数</label>
+                        <input id="add-luntaishu" name="luntaishu" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-spec">轮胎规格</label>
+                        <input id="add-spec" name="spec" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-tanhuangshu">钢板弹簧片数</label>
+                        <input id="add-tanhuangshu" name="tanhuangshu" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-zhoujv">轴距</label>
+                        <input id="add-zhoujv" name="zhoujv" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-zhoushu">轴数</label>
+                        <input id="add-zhoushu" name="zhoushu" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-huoxiangSize">货箱内尺寸</label>
+                        <input id="add-huoxiangSize" name="huoxiangSize" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-waikuoSize">外廓尺寸</label>
+                        <input id="add-waikuoSize" name="waikuoSize" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-zongzhiliang">总质量</label>
+                        <input id="add-zongzhiliang" name="zongzhiliang" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-hedingzaizhiliang">核定载质量</label>
+                        <input id="add-hedingzaizhiliang" name="hedingzaizhiliang" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-zaike">核定载客</label>
+                        <input id="add-zaike" name="zaike" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-qianyin">准牵引总质量</label>
+                        <input id="add-qianyin" name="qianyin" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-jiashishizaike">驾驶室载客</label>
+                        <input id="add-jiashishizaike" name="jiashishizaike" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-shiyongxingzhi">使用性质</label>
+                        <input id="add-shiyongxingzhi" name="shiyongxingzhi" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-chuchangRiqi">出厂日期</label>
+                        <input id="add-chuchangRiqi" name="chuchangRiqi" type="date" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-dunwei">运营吨位</label>
+                        <input id="add-dunwei" name="dunwei" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-zhengshoudunwei">征收吨位</label>
+                        <input id="add-zhengshoudunwei" name="zhengshoudunwei" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-fazhengRiqi">发证日期</label>
+                        <input id="add-fazhengRiqi" name="fazhengRiqi" type="date" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-yingyunzhenghao">营运证号</label>
+                        <input id="add-yingyunzhenghao" name="yingyunzhenghao" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-zigezhenghao">资格证号</label>
+                        <input id="add-zigezhenghao" name="zigezhenghao" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-zigezhengyouxiaoqi">资格证有效期</label>
+                        <input id="add-zigezhengyouxiaoqi" name="zigezhengyouxiaoqi" type="date" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-daoqiRiqi">挂靠到期时间</label>
+                        <input id="add-daoqiRiqi" name="daoqiRiqi" type="date" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-erweidaoqiRiqi">二维到期时间</label>
+                        <input id="add-erweidaoqiRiqi" name="erweidaoqiRiqi" type="date" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-fuwufeibiaozhun">服务费标准</label>
+                        <input id="add-fuwufeibiaozhun" name="fuwufeibiaozhun" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-daiguachefou">带挂车否</label>
+                        <select id="add-daiguachefou" name="daiguachefou" class="form-control" autocomplete="off" data-required="1">
+                            <option value="是">是</option>
+                            <option value="否">否</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-guacheqita">挂车其他</label>
+                        <input id="add-guacheqita" name="guacheqita" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-remarks">备注</label>
+                        <input id="add-remarks" name="remarks" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                </form>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="add-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    提交
+                </button>
+                <button id="add-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="update-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">编辑</div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="update-form" class="needs-validation">
+                    <div class="form-group">
+                        <input id="id" name="id" type="hidden">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-chepai">车牌</label>
+                        <input id="update-chepai" name="chepai" type="text" class="form-control" autocomplete="off">
+                        <div class="invalid-feedback">
+                            请输入车牌！
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-cheduiNo">车队编号</label>
+                        <input id="update-cheduiNo" name="cheduiNo" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-fileNo">档案号</label>
+                        <input id="update-fileNo" name="fileNo" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-gouruRiqi">购入日期</label>
+                        <input id="update-gouruRiqi" name="gouruRiqi" type="date" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-goumaiJiage">购买价格</label>
+                        <input id="update-goumaiJiage" name="goumaiJiage" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-factory">汽车厂家</label>
+                        <input id="update-factory" name="factory" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-gongli">初始公里数</label>
+                        <input id="update-gongli" name="gongli" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-youhao">耗油量</label>
+                        <input id="update-youhao" name="youhao" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-phone">联系电话</label>
+                        <input id="update-phone" name="phone" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-carType">车辆类型</label>
+                        <input id="update-carType" name="carType" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-carBrand">车辆品牌</label>
+                        <input id="update-carBrand" name="carBrand" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-carModel">车辆型号</label>
+                        <input id="update-carModel" name="carModel" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-carColor">车身颜色</label>
+                        <input id="update-carColor" name="carColor" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-chejiahao">车架号</label>
+                        <input id="update-chejiahao" name="chejiahao" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-chegoushuihao">车购税号</label>
+                        <input id="update-chegoushuihao" name="chegoushuihao" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-guochanJinkou">国产或进口</label>
+                        <select id="update-guochanJinkou" name="guochanJinkou" class="form-control" autocomplete="off" data-required="1">
+                            <option value="国产">国产</option>
+                            <option value="进口">进口</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-fadongjihao">发动机号</label>
+                        <input id="update-fadongjihao" name="fadongjihao" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-fadongjixinghao">发动机型号</label>
+                        <input id="update-fadongjixinghao" name="fadongjixinghao" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-ranliao">燃料种类</label>
+                        <input id="update-ranliao" name="ranliao" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-pailiang">排量及功率</label>
+                        <input id="update-pailiang" name="pailiang" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-zhizaochang">制造厂名称</label>
+                        <input id="update-zhizaochang" name="zhizaochang" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-lunjv">轮距</label>
+                        <input id="update-lunjv" name="lunjv" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-luntaishu">轮胎数</label>
+                        <input id="update-luntaishu" name="luntaishu" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-spec">轮胎规格</label>
+                        <input id="update-spec" name="spec" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-tanhuangshu">钢板弹簧片数</label>
+                        <input id="update-tanhuangshu" name="tanhuangshu" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-zhoujv">轴距</label>
+                        <input id="update-zhoujv" name="zhoujv" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-zhoushu">轴数</label>
+                        <input id="update-zhoushu" name="zhoushu" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-huoxiangSize">货箱内尺寸</label>
+                        <input id="update-huoxiangSize" name="huoxiangSize" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-waikuoSize">外廓尺寸</label>
+                        <input id="update-waikuoSize" name="waikuoSize" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-zongzhiliang">总质量</label>
+                        <input id="update-zongzhiliang" name="zongzhiliang" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-hedingzaizhiliang">核定载质量</label>
+                        <input id="update-hedingzaizhiliang" name="hedingzaizhiliang" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-zaike">核定载客</label>
+                        <input id="update-zaike" name="zaike" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-qianyin">准牵引总质量</label>
+                        <input id="update-qianyin" name="qianyin" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-jiashishizaike">驾驶室载客</label>
+                        <input id="update-jiashishizaike" name="jiashishizaike" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-shiyongxingzhi">使用性质</label>
+                        <input id="update-shiyongxingzhi" name="shiyongxingzhi" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-chuchangRiqi">出厂日期</label>
+                        <input id="update-chuchangRiqi" name="chuchangRiqi" type="date" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-dunwei">运营吨位</label>
+                        <input id="update-dunwei" name="dunwei" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-zhengshoudunwei">征收吨位</label>
+                        <input id="update-zhengshoudunwei" name="zhengshoudunwei" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-fazhengRiqi">发证日期</label>
+                        <input id="update-fazhengRiqi" name="fazhengRiqi" type="date" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-yingyunzhenghao">营运证号</label>
+                        <input id="update-yingyunzhenghao" name="yingyunzhenghao" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-zigezhenghao">资格证号</label>
+                        <input id="update-zigezhenghao" name="zigezhenghao" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-zigezhengyouxiaoqi">资格证有效期</label>
+                        <input id="update-zigezhengyouxiaoqi" name="zigezhengyouxiaoqi" type="date" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-daoqiRiqi">挂靠到期时间</label>
+                        <input id="update-daoqiRiqi" name="daoqiRiqi" type="date" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-erweidaoqiRiqi">二维到期时间</label>
+                        <input id="update-erweidaoqiRiqi" name="erweidaoqiRiqi" type="date" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-fuwufeibiaozhun">服务费标准</label>
+                        <input id="update-fuwufeibiaozhun" name="fuwufeibiaozhun" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-daiguachefou">带挂车否</label>
+                        <select id="update-daiguachefou" name="daiguachefou" class="form-control" autocomplete="off" data-required="1">
+                            <option value="是">是</option>
+                            <option value="否">否</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-guacheqita">挂车其他</label>
+                        <input id="update-guacheqita" name="guacheqita" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-remarks">备注</label>
+                        <input id="update-remarks" name="remarks" type="text" class="form-control" autocomplete="off" data-required="1">
+                    </div>
+                </form>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="update-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    提交
+                </button>
+                <button id="update-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="delete-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">提示</div>
+            </div>
+            <div id="delete-modal-body" class="modal-body">
+                确定删除吗？
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="delete-submit-btn" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    确定
+                </button>
+                <button id="delete-close-btn" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    取消
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- loading -->
+<div class="modal" id="loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop='static'>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">提示</h4>
+            </div>
+            <div class="modal-body">
+                上传文件中，请稍候...<span id="result"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
