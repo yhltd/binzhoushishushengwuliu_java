@@ -26,37 +26,32 @@
 </head>
 
 <body class="pt-2">
-<div class="top-toolbar row">
-    <div class="col-md-3 mb-2">
-        <input id="value" type="text" class="form-control" placeholder="装货点或卸货点" autocomplete="off">
+
+<div id="table-toolbar">
+    <div class="btn-group" role="group" style="width: 500px">
+        <button id="refresh-btn" class="btn btn-primary" title="刷新">
+            <i class="bi bi-arrow-clockwise icon"></i>
+        </button>
+        <button id="add-btn" class="btn btn-primary" title="新增">
+            <i class="bi bi-plus-square icon"></i>
+        </button>
+        <button id="update-btn" class="btn btn-primary" title="修改">
+            <i class="bi bi-pencil-square icon"></i>
+        </button>
+        <button id="delete-btn" class="btn btn-primary" title="删除">
+            <i class="bi bi-trash icon"></i>
+        </button>
+        <a class="btn btn-primary" style="color: white;padding-top: 8px">当前页：工资配置</a>
     </div>
-    <div class="col-md-2 mb-2">
+
+    <div class="col-md-4 mb-2" style="margin-bottom: 0!important;">
+        <input id="value" type="text" class="form-control" placeholder="装货点/卸货点" autocomplete="off">
+    </div>
+    <div class="col-md-2 mb-2" style="margin-bottom: 0!important;">
         <button id="select-btn" class="btn btn-primary">
             <i class="bi bi-search icon"></i>
             查询
         </button>
-    </div>
-</div>
-
-<div id="table-toolbar">
-    <div class="btn-group" role="group">
-        <button id="refresh-btn" class="btn btn-primary">
-            <i class="bi bi-arrow-clockwise icon"></i>
-            刷新
-        </button>
-        <button id="add-btn" class="btn btn-primary">
-            <i class="bi bi-plus-square icon"></i>
-            新增
-        </button>
-        <button id="update-btn" class="btn btn-primary">
-            <i class="bi bi-pencil-square icon"></i>
-            修改
-        </button>
-        <button id="delete-btn" class="btn btn-primary">
-            <i class="bi bi-trash icon"></i>
-            删除
-        </button>
-        <a class="btn btn-primary" style="color: white;padding-top: 8px">当前页：工资配置</a>
     </div>
 </div>
 

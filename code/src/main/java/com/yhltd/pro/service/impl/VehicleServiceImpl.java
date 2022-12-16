@@ -24,6 +24,11 @@ public class VehicleServiceImpl extends ServiceImpl<VehicleMapper, Vehicle> impl
     }
 
     @Override
+    public List<Vehicle> getChepai() {
+        return vehicleMapper.getChepai();
+    }
+
+    @Override
     public List<Vehicle> queryList(String chepai) {
         return vehicleMapper.queryList(chepai);
     }

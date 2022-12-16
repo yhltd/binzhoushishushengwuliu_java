@@ -17,8 +17,36 @@ function getList() {
     })
 }
 
+function getName() {
+    $ajax({
+        type: 'post',
+        url: '/driver/getName',
+    }, false, '', function (res) {
+        if (res.code == 200) {
+            for (var i = 0; i < res.data.length; i++) {
+                $("#name").append("<option>" + res.data[i].name + "</option>");
+            }
+        }
+    })
+}
+
+function getChepai() {
+    $ajax({
+        type: 'post',
+        url: '/driver/getChepai',
+    }, false, '', function (res) {
+        if (res.code == 200) {
+            for (var i = 0; i < res.data.length; i++) {
+                $("#chepai").append("<option>" + res.data[i].chepai + "</option>");
+            }
+        }
+    })
+}
+
 $(function () {
     getList();
+    getName();
+    getChepai();
 
     $('#select-btn').click(function () {
         var name = $('#name').val();
@@ -185,6 +213,7 @@ $(function () {
                 fileInput.value = '';
                 //影藏
                 $('#loading').modal('hide');
+                getList();
             } else {
                 alert(res.msg);
                 formData = new FormData();
@@ -209,16 +238,18 @@ function setTable(data) {
         classes: 'table table-hover text-nowrap table table-bordered',
         idField: 'id',
         pagination: true,
-        pageSize: 20,//单页记录数
-        clickToSelect: true,
+        pageSize: 50,//单页记录数
+        //clickToSelect: true,
         locale: 'zh-CN',
         toolbar: '#table-toolbar',
         toolbarAlign: 'left',
         theadClasses: "thead-light",//这里设置表头样式
         style: 'table-layout:fixed',
-        height: document.body.clientHeight * 0.85,
+        height: document.body.clientHeight * 0.93,
         columns: [
             {
+                checkbox: true
+            }, {
                 field: '',
                 title: '序号',
                 align: 'center',
@@ -297,21 +328,34 @@ function setTable(data) {
                 title: '照片',
                 align: 'center',
                 sortable: true,
-                width: 200,
+                width: 150,
                 formatter: function (value, row, index) {
                     return '<button onclick="javascript:fileUp(' + row.id + ')" class="btn btn-primary">上传</button>&nbsp;&nbsp;&nbsp;&nbsp;<button onclick="javascript:fileDown(' + row.id + ')" class="btn btn-primary">下载</button>'
                     //return '<button onclick="javascript:pass(' + row.id + ','+ row.userId +')" class="btn-sm btn-primary">通过</button> <button onclick="javascript:refuse(' + row.id + ','+ row.userId +')" class="btn-sm btn-primary">拒绝</button>'
                 }
+            }, {
+                field: 'filepath',
+                title: '图片',
+                align: 'center',
+                sortable: true,
+                width: 100,
+                formatter: function (value, row, index) {
+                    if (value != null && value != "") {
+                        var a = value.split("/");
+                        a = "/" + a[a.length - 1];
+                        return '<a href="' + a + '" style="display:block" target="_blank"><img src="' + a + '" style="width: 50px;"></a>'
+                    }
+                }
             }
         ],
-        onClickRow: function (row, el) {
-            let isSelect = $(el).hasClass('selected');
-            if (isSelect) {
-                $(el).removeClass('selected')
-            } else {
-                $(el).addClass('selected')
-            }
-        }
+        // onClickRow: function (row, el) {
+        //     let isSelect = $(el).hasClass('selected');
+        //     if (isSelect) {
+        //         $(el).removeClass('selected')
+        //     } else {
+        //         $(el).addClass('selected')
+        //     }
+        // }
     })
 }
 
@@ -322,5 +366,5 @@ function fileUp(id) {
 
 
 function fileDown(id) {
-    window.open("/driver/getFile?id="+id);
+    window.open("/driver/getFile?id=" + id);
 }

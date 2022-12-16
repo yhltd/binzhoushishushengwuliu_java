@@ -72,6 +72,40 @@ public class CombinationController {
         }
     }
 
+    /**
+     * 查询所有
+     *
+     * @return ResultInfo
+     */
+    @RequestMapping("/getZhujia")
+    public ResultInfo getZhujia() {
+        try {
+            List<Combination> getList = combinationService.getZhujia();
+            return ResultInfo.success("获取成功", getList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("获取失败：{}", e.getMessage());
+            return ResultInfo.error("错误!");
+        }
+    }
+
+    /**
+     * 查询所有
+     *
+     * @return ResultInfo
+     */
+    @RequestMapping("/getFujia")
+    public ResultInfo getFujia() {
+        try {
+            List<Combination> getList = combinationService.getFujia();
+            return ResultInfo.success("获取成功", getList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("获取失败：{}", e.getMessage());
+            return ResultInfo.error("错误!");
+        }
+    }
+
     @RequestMapping("/queryList")
     public ResultInfo queryList(HttpSession session, String name, String chepai) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);

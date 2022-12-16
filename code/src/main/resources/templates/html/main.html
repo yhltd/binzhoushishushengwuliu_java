@@ -15,7 +15,54 @@
     <link rel="stylesheet" href="../css/main.css">
 
     <script type="text/javascript">
+
+        // $(function () {
+        //
+        // });
+
         $(function () {
+            // $ajax({
+            //     type: 'post',
+            //     url: '/user/getPower2',
+            //     data:{
+            //         id:$.session.get('user_id'),
+            //     },
+            // }, false, '', function (res) {
+            //     if (res.code == 200) {
+            //         for (var i = 0; i < res.data.length; i++) {
+            //             if((res.data[i].viewName=="送货地址" && res.data[i].sel!="√") || $.session.get('power')!="管理员"){
+            //                 $('#address').hide();
+            //             }else if((res.data[i].viewName=="客户信息" && res.data[i].sel!="√") || $.session.get('power')!="管理员"){
+            //                 $('#kehu').hide();
+            //             }else if((res.data[i].viewName=="产品信息" && res.data[i].sel!="√") || $.session.get('power')!="管理员"){
+            //                 $('#product').hide();
+            //             }else if((res.data[i].viewName=="挂车信息" && res.data[i].sel!="√") || $.session.get('power')!="管理员"){
+            //                 $('#guache').hide();
+            //             }else if((res.data[i].viewName=="车辆管理信息" && res.data[i].sel!="√") || $.session.get('power')!="管理员"){
+            //                 $('#vehicle').hide();
+            //             }else if((res.data[i].viewName=="司机信息" && res.data[i].sel!="√") || $.session.get('power')!="管理员"){
+            //                 $('#driver').hide();
+            //             }else if((res.data[i].viewName=="车牌组合信息" && res.data[i].sel!="√") || $.session.get('power')!="管理员"){
+            //                 $('#combination').hide();
+            //             }else if((res.data[i].viewName=="数据表" && res.data[i].sel!="√") || $.session.get('power')!="管理员"){
+            //                 $('#shujv').hide();
+            //             }else if((res.data[i].viewName=="司机录入" && res.data[i].sel!="√") || $.session.get('power')!="管理员"){
+            //
+            //             }else if((res.data[i].viewName=="工资查询" && res.data[i].sel!="√") || $.session.get('power')!="管理员"){
+            //                 $('#salary').hide();
+            //             }else if((res.data[i].viewName=="图表生成" && res.data[i].sel!="√") || $.session.get('power')!="管理员"){
+            //                 $('#tubiao').hide();
+            //             }else if((res.data[i].viewName=="用户管理" && res.data[i].sel!="√") || $.session.get('power')!="管理员"){
+            //                 $('#userInfo').hide();
+            //             }else if((res.data[i].viewName=="操作日志" && res.data[i].sel!="√") || $.session.get('power')!="管理员"){
+            //                 $('#log').hide();
+            //             }else if((res.data[i].viewName=="工资配置" && res.data[i].sel!="√") || $.session.get('power')!="管理员"){
+            //                 $('#payroll').hide();
+            //             }
+            //         }
+            //     }
+            // });
+
             $('a').click(function () {
                 let src = $(this).data('src');
                 if (src != '' && src != undefined) {
@@ -28,7 +75,9 @@
                     //     $('.navbar-toggler').click();
                     // }
                 }
-            })
+            });
+
+
         })
 
     </script>
@@ -63,22 +112,22 @@
                     配置
                 </a>
                 <div class="dropdown-menu" aria-labelledby="peizhi">
-                    <a class="dropdown-item" data-src="address.html" style="color: black !important;">送货地址</a>
-                    <a class="dropdown-item" data-src="customer.html" style="color: black !important;">客户信息</a>
-                    <a class="dropdown-item" data-src="product.html" style="color: black !important;">产品信息</a>
-                    <a class="dropdown-item" data-src="vehicle.html" style="color: black !important;">车辆信息管理</a>
-                    <a class="dropdown-item" data-src="driver.html" style="color: black !important;">司机信息</a>
-                    <a class="dropdown-item" data-src="combination.html" style="color: black !important;">车牌组合信息</a>
-                    <a class="dropdown-item" data-src="payroll.html" style="color: black !important;">工资配置</a>
+                    <a id="address" class="dropdown-item" data-src="address.html" style="color: black !important;">送货地址</a>
+                    <a id="kehu" class="dropdown-item" data-src="customer.html" style="color: black !important;">客户信息</a>
+                    <a id="product" class="dropdown-item" data-src="product.html" style="color: black !important;">产品信息</a>
+                    <a id="vehicle" class="dropdown-item" data-src="vehicle.html" style="color: black !important;">车辆信息管理</a>
+                    <a id="driver" class="dropdown-item" data-src="driver.html" style="color: black !important;">司机信息</a>
+                    <a id="combination" class="dropdown-item" data-src="combination.html" style="color: black !important;">车牌组合信息</a>
+                    <a id="payroll" class="dropdown-item" data-src="payroll.html" style="color: black !important;">工资配置</a>
                 </div>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="shujv" role="button"
+                <a class="nav-link dropdown-toggle" href="#" id="shujvguanli" role="button"
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: white !important;">
                     数据管理
                 </a>
-                <div class="dropdown-menu" aria-labelledby="shujv">
-                    <a class="dropdown-item" data-src="shujv.html" style="color: black !important;">数据表</a>
+                <div class="dropdown-menu" aria-labelledby="shujvguanli">
+                    <a id="shujv" class="dropdown-item" data-src="shujv.html" style="color: black !important;">数据表</a>
 <!--                    <a class="dropdown-item" data-src="" style="color: black !important;">司机录入</a>-->
                 </div>
             </li>
@@ -88,18 +137,18 @@
                     统计汇总
                 </a>
                 <div class="dropdown-menu" aria-labelledby="tongji">
-                    <a class="dropdown-item" data-src="salary.html" style="color: black !important;">工资查询</a>
-                    <a class="dropdown-item" data-src="tubiao.html" style="color: black !important;">图表生成</a>
+                    <a id="salary" class="dropdown-item" data-src="salary.html" style="color: black !important;">工资查询</a>
+                    <a id="tubiao" class="dropdown-item" data-src="tubiao.html" style="color: black !important;">图表生成</a>
                 </div>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="zhanghao" role="button"
+                <a  class="nav-link dropdown-toggle" href="#" id="zhanghao" role="button"
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: white !important;">
                     账号管理
                 </a>
                 <div class="dropdown-menu" aria-labelledby="zhanghao">
-                    <a class="dropdown-item" data-src="userInfo.html" style="color: black !important;">用户管理</a>
-                    <a class="dropdown-item" data-src="log.html" style="color: black !important;">操作日志</a>
+                    <a id="userInfo" class="dropdown-item" data-src="userInfo.html" style="color: black !important;">用户管理</a>
+                    <a id="log" class="dropdown-item" data-src="log.html" style="color: black !important;">操作日志</a>
                 </div>
             </li>
         </ul>
@@ -109,7 +158,7 @@
                 <a href="#" class="nav-link" data-src="退出" style="color: white !important;">退出</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-src="" style="color: white !important;">版本：v0.1</a>
+                <a class="nav-link" data-src="" style="color: white !important;">版本：v0.2</a>
             </li>
         </ul>
     </div>

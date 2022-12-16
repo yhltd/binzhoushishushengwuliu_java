@@ -24,6 +24,7 @@
     <script type="text/javascript" src="../js/main.js"></script>
     <script type="text/javascript" src="../js/shujv.js"></script>
     <script type="text/javascript" src="../js/tableExport.js"></script>
+    <script type="text/javascript" src="js/jquerysession.js"></script>
 </head>
 
 <body class="pt-2">
@@ -35,7 +36,8 @@
         <input id="js" type="date" class="form-control" autocomplete="off">
     </div>
     <div class="col-md-3 mb-2">
-        <input id="chetou" type="text" class="form-control" placeholder="车头" autocomplete="off">
+        <select id="chetou" class="form-control"><option></option></select>
+<!--        <input id="chetou" type="text" class="form-control" placeholder="车头" autocomplete="off">-->
     </div>
     <div class="col-md-2 mb-2">
         <button id="select-btn" class="btn btn-primary">
@@ -46,30 +48,76 @@
 </div>
 
 <div id="table-toolbar">
-    <div class="btn-group" role="group">
-        <button id="refresh-btn" class="btn btn-primary">
+    <div class="btn-group" role="group" style="width:500px">
+        <button id="refresh-btn" class="btn btn-primary" title="刷新">
             <i class="bi bi-arrow-clockwise icon"></i>
-            刷新
         </button>
-        <button id="add-btn" class="btn btn-primary">
+        <button id="add-btn" class="btn btn-primary" title="新增">
             <i class="bi bi-plus-square icon"></i>
-            新增
         </button>
-        <button id="update-btn" class="btn btn-primary">
+        <button id="update-btn" class="btn btn-primary" title="修改">
             <i class="bi bi-pencil-square icon"></i>
-            修改
         </button>
-        <button id="delete-btn" class="btn btn-primary">
+        <button id="delete-btn" class="btn btn-primary" title="删除">
             <i class="bi bi-trash icon"></i>
-            删除
         </button>
-        <button id="export-btn" class="btn btn-primary"
+        <button id="export-btn" title="导出Excel" class="btn btn-primary"
                 onClick="$('#shujvTable').tableExport({ type: 'excel', escape: 'false' })">
             <i class="bi bi-file-earmark-spreadsheet"></i>
-            导出Excel
         </button>
         <a class="btn btn-primary" style="color: white;padding-top: 8px">当前页：数据表</a>
     </div>
+    <div class="col-md-3 mb-2" style="margin-bottom: 0!important;">
+        <select id="yincang" class="form-control">
+            <option>提货日期</option>
+            <option>卸货日期</option>
+            <option>车头</option>
+            <option>挂车</option>
+            <option>主驾</option>
+            <option>副驾</option>
+            <option>电话号码</option>
+            <option>客户</option>
+            <option>出厂/起</option>
+            <option>入场/止</option>
+            <option>品名</option>
+            <option>提货数量</option>
+            <option>收货数量</option>
+            <option>总里程</option>
+            <option>本次里程</option>
+            <option>本次加油</option>
+            <option>100KM油耗</option>
+            <option>每公升行驶里程</option>
+            <option>百吨油耗</option>
+            <option>尿素</option>
+            <option>磅费</option>
+            <option>ETC</option>
+            <option>现金</option>
+            <option>修理费</option>
+            <option>汽车</option>
+            <option>加水</option>
+            <option>车费</option>
+            <option>停车</option>
+            <option>住宿</option>
+            <option>杂费</option>
+            <option>生活费</option>
+            <option>运费</option>
+            <option>交警罚款</option>
+            <option>合计</option>
+            <option>收费站</option>
+            <option>备注信息</option>
+        </select>
+    </div>
+    <div class="btn-group" role="group" style="width: 200px">
+        <button id="yincang-btn" class="btn btn-primary">
+            <i class="bi bi-eye-slash"></i>
+            隐藏
+        </button>
+        <button id="xianshi-btn" class="btn btn-primary">
+            <i class="bi bi-eye"></i>
+            显示
+        </button>
+    </div>
+
 </div>
 
 <div class="table-div border-top">
@@ -123,7 +171,7 @@
                         <input id="add-phone" name="phone" type="text" class="form-control" autocomplete="off"
                                data-required="1" readonly="readonly">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="add-kehu-yincang">
                         <label for="add-kehu">客户</label>
                         <input id="add-kehu" name="kehu" type="text" class="form-control" autocomplete="off"
                                data-required="1" readonly="readonly">
@@ -318,7 +366,7 @@
                         <input id="update-phone" name="phone" type="text" class="form-control" autocomplete="off"
                                data-required="1" readonly="readonly">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="update-kehu-yincang">
                         <label for="update-kehu">客户</label>
                         <input id="update-kehu" name="kehu" type="text" class="form-control" autocomplete="off"
                                data-required="1" readonly="readonly">

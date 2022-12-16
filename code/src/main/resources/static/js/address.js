@@ -127,17 +127,20 @@ function setTable(data) {
         classes: 'table',
         idField: 'id',
         pagination: true,
-        pageSize: 20,//单页记录数
-        clickToSelect: true,
+        pageSize: 50,//单页记录数
+        // clickToSelect: true,
+        // singleSelect: true,
         locale: 'zh-CN',
         toolbar: '#table-toolbar',
         toolbarAlign: 'left',
         theadClasses: "thead-light",//这里设置表头样式
         style: 'table-layout:fixed',
-        height: document.body.clientHeight * 0.85,
+        height: document.body.clientHeight * 0.93,
         //search:true,
         columns: [
             {
+                checkbox: true,
+            }, {
                 field: '',
                 title: '序号',
                 align: 'center',
@@ -152,7 +155,7 @@ function setTable(data) {
                 sortable: true,
                 width: 150,
                 formatter: function (value, row, index) {
-                    return '<input id="sh_address' + row.id + '" onblur="javascript:columnUpd(' + row.id + ',' + '\'sh_address\'' + ')" value="' + value + '" class="form-control" style="width: 95%;font-size:13px"  >'
+                    return '<input id="sh_address' + row.id + '" onblur="javascript:columnUpd(' + row.id + ',' + '\'sh_address\'' + ')" value="' + value + '" class="form-control" style="font-size:13px"  >'
                 }
             }, {
                 field: 'shJx',
@@ -161,7 +164,7 @@ function setTable(data) {
                 sortable: true,
                 width: 150,
                 formatter: function (value, row, index) {
-                    return '<input id="sh_jx' + row.id + '" onblur="javascript:columnUpd(' + row.id + ',' + '\'sh_jx\'' + ')" value="' + value + '" class="form-control" style="width: 95%;font-size:13px" >'
+                    return '<input id="sh_jx' + row.id + '" onblur="javascript:columnUpd(' + row.id + ',' + '\'sh_jx\'' + ')" value="' + value + '" class="form-control" style="font-size:13px" >'
                 }
             }, {
                 field: 'sfAddress',
@@ -170,7 +173,7 @@ function setTable(data) {
                 sortable: true,
                 width: 150,
                 formatter: function (value, row, index) {
-                    return '<input id="sf_address' + row.id + '" onblur="javascript:columnUpd(' + row.id + ',' + '\'sf_address\'' + ')" value="' + value + '" class="form-control" style="width: 95%;font-size:13px" >'
+                    return '<input id="sf_address' + row.id + '" onblur="javascript:columnUpd(' + row.id + ',' + '\'sf_address\'' + ')" value="' + value + '" class="form-control" style="font-size:13px" >'
                 }
             }, {
                 field: 'sfJx',
@@ -179,17 +182,17 @@ function setTable(data) {
                 sortable: true,
                 width: 150,
                 formatter: function (value, row, index) {
-                    return '<input id="sf_jx' + row.id + '" onblur="javascript:columnUpd(' + row.id + ',' + '\'sf_jx\'' + ')" value="' + value + '" class="form-control" style="width: 95%;font-size:13px" >'
+                    return '<input id="sf_jx' + row.id + '" onblur="javascript:columnUpd(' + row.id + ',' + '\'sf_jx\'' + ')" value="' + value + '" class="form-control" style="font-size:13px" >'
                 }
             }
         ],
-        onClickRow: function (row, el) {
-            let isSelect = $(el).hasClass('selected');
-            if (isSelect) {
-                $(el).removeClass('selected')
-            } else {
-                $(el).addClass('selected')
-            }
-        }
+        // onClickRow: function (row, el) {
+        //     let isSelect = $(el).hasClass('selected');
+        //     if (isSelect) {
+        //         $(el).removeClass('selected')
+        //     } else {
+        //         $(el).addClass('selected')
+        //     }
+        // }
     })
 }

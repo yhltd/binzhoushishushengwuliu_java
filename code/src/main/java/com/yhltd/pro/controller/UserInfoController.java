@@ -50,7 +50,10 @@ public class UserInfoController {
             } else {
                 SessionUtil.setToken(session, map.get("token").toString());
                 SessionUtil.setPower(session, StringUtils.cast(map.get("power")));
-                return ResultInfo.success("登陆成功", null);
+
+                UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);
+
+                return ResultInfo.success("登陆成功", userInfo);
             }
         } catch (Exception e) {
             log.error("登陆失败：{}", e.getMessage());
@@ -96,6 +99,23 @@ public class UserInfoController {
             return ResultInfo.error(401, "无权限！");
         }
 
+        try {
+            List<UserPower> getList = userPowerService.getListById(id);
+            return ResultInfo.success("获取成功", getList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("获取失败：{}", e.getMessage());
+            return ResultInfo.error("错误！");
+        }
+    }
+
+    /**
+     * 刷新
+     *
+     * @return ResultInfo
+     */
+    @RequestMapping("/getPower2")
+    public ResultInfo getPower2(int id, HttpSession session) {
         try {
             List<UserPower> getList = userPowerService.getListById(id);
             return ResultInfo.success("获取成功", getList);
@@ -188,7 +208,12 @@ public class UserInfoController {
                     userPower.setAdd("");
                     userPower.setDel("");
                     userPower.setUpd("");
-                    userPower.setSel("");
+                    if (ui.getPower().equals("审核人")) {
+                        userPower.setSel("√");
+                    } else {
+                        userPower.setSel("");
+                    }
+
                     if (i == 0) {
                         userPower.setViewName("送货地址");
                     } else if (i == 1) {

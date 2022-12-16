@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册账号</title>
+    <link rel="shortcut icon" href="#"/>
+
+    <script type="text/javascript" src="../js/Jquery.js"></script>
+    <script type="text/javascript" src="../js/jquerysession.js"></script>
+
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/icons/bootstrap-icons.css">
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap.min.js"></script>
+
+    <!--bootstrap-table-->
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/css/bootstrap-table.css">
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table-zh-CN.min.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/colResizable-1.6.js"></script>
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap-table-resizable.js"></script>
+
+    <link rel="stylesheet" href="../css/main.css">
+    <script type="text/javascript" src="../js/main.js"></script>
+    <script type="text/javascript" src="../js/shujv-driver.js"></script>
+
+    <style>
+        p {
+            font-size: 12px;
+            color: #6b6161;
+        }
+
+        img[src=""], img:not([src]) {
+            opacity: 0;
+        }
+
+        .imgBorder {
+            border: solid 1px #6b6161;
+            width: 150px;
+            height: 100px;
+        }
+    </style>
+</head>
+
+<body class="pt-2">
+
+<div id="table-toolbar" style="margin-top: 1%">
+    <div class="btn-group" role="group">
+        <a class="btn btn-primary" style="color: white;padding-top: 8px">当前页：数据录入</a>
+    </div>
+</div>
+
+<div style="margin-top: 1%">
+    <form id="add-form" class="needs-validation">
+        <div class="form-group">
+            <label for="add-riqi"><span style="color: red">*</span>选择日期</label>
+            <input id="add-riqi" name="riqi" type="date" class="form-control" autocomplete="off">
+        </div>
+        <label><span style="color: red">*</span>车辆类型</label>
+        <div class="form-group">
+            <label for="add-weihuo">危货</label>
+            <input id="add-weihuo" name="type" type="radio" style="width: 5%">
+            <label for="add-puhuo">普货</label>
+            <input id="add-puhuo" name="type" type="radio" style="width: 5%">
+        </div>
+        <div class="form-group" id="zhujia">
+            <label for="add-zhujia" id="zhujia-label">危货驾驶员</label>
+            <select id="add-zhujia" name="zhujia" type="text" class="form-control">
+                <option></option>
+            </select>
+        </div>
+        <div class="form-group" id="fujia">
+            <label for="add-fujia">危货押运员</label>
+            <select id="add-fujia" name="fujia" type="text" class="form-control">
+                <option></option>
+            </select>
+        </div>
+        <label><span style="color: red">*</span>您的车辆信息</label>
+        <div class="form-group">
+            <label for="add-zhongche">重车</label>
+            <input id="add-zhongche" name="vehicle" type="radio"  style="width: 5%">
+            <label for="add-kongche">空车</label>
+            <input id="add-kongche" name="vehicle" type="radio"  style="width: 5%">
+        </div>
+        <div id="yincang1">
+            <div class="form-group">
+                <label for="add-tonnage">输入装货吨位</label>
+                <input id="add-tonnage" name="tonnage" type="text" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>请上传提货磅单图片（清晰无阴影）</label>
+            </div>
+            <div class="form-group">
+                <div class="imgBorder">
+                    <img id="img1" onclick="javascript:fileClick('1')" style="width: 150px;height: 100px">
+                </div>
+            </div>
+        </div>
+        <div id="yincang2">
+            <div class="form-group">
+                <label for="add-chetou" id="chetou_label"></label>
+                <input id="add-chetou" name="chetou" type="text" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="add-guache" id="guache_label"></label>
+                <input id="add-guache" name="guache" type="text" class="form-control">
+            </div>
+        </div>
+        <label>路线详情</label>
+        <p>一行填写一段路程数据</p>
+        <div class="pre-scrollable word-wrap:break-word" style="height: 200px;">
+            <table id="table" class="table" style="width: 1000px">
+                <tr>
+                    <th></th>
+                    <th>起点</th>
+                    <th>终点</th>
+                    <th>此段路桥费</th>
+                    <th>此段公里数</th>
+                    <th>总油耗</th>
+                    <th>平均油耗</th>
+                </tr>
+            </table>
+        </div>
+        <button id="addRow" class="btn btn-primary" type="button" style="width: 150px">添加</button>
+        <button id="delRow" class="btn btn-primary" type="button" style="width: 150px">删除</button>
+
+        <div>
+            <div class="form-group" style="margin-top: 20px">
+                <label>请上传仪表台盘照片（清晰无阴影）</label>
+            </div>
+            <div class="form-group">
+                <div class="imgBorder">
+                    <img id="img2" onclick="javascript:fileClick('2')" style="width: 150px;height: 100px">
+                </div>
+                <div class="imgBorder">
+                    <img id="img3" onclick="javascript:fileClick('3')" style="width: 150px;height: 100px">
+                </div>
+                <div class="imgBorder">
+                    <img id="img4" onclick="javascript:fileClick('4')" style="width: 150px;height: 100px">
+                </div>
+                <div class="imgBorder">
+                    <img id="img5" onclick="javascript:fileClick('5')" style="width: 150px;height: 100px">
+                </div>
+            </div>
+        </div>
+
+        <label><span style="color: red">*</span>是否中途加油</label>
+        <div class="form-group">
+            <label for="add-is">是</label>
+            <input id="add-is" name="jiayou" type="radio" style="width: 5%">
+            <label for="add-not">否</label>
+            <input id="add-not" name="jiayou" type="radio" style="width: 5%">
+        </div>
+        <div id="yincang3">
+            <div class="form-group">
+                <label>请上传加油 归零前 仪表照片</label>
+            </div>
+            <div class="form-group">
+                <div class="imgBorder">
+                    <img id="img6" onclick="javascript:fileClick('6')" style="width: 150px;height: 100px">
+                </div>
+                <div class="imgBorder">
+                    <img id="img7" onclick="javascript:fileClick('7')" style="width: 150px;height: 100px">
+                </div>
+                <div class="imgBorder">
+                    <img id="img8" onclick="javascript:fileClick('8')" style="width: 150px;height: 100px">
+                </div>
+                <div class="imgBorder">
+                    <img id="img9" onclick="javascript:fileClick('9')" style="width: 150px;height: 100px">
+                </div>
+                <div class="imgBorder">
+                    <img id="img10" onclick="javascript:fileClick('10')" style="width: 150px;height: 100px">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="add-niaosu">备注（领取尿素桶数）</label>
+            <input id="add-niaosu" name="niaosu" type="text" class="form-control" autocomplete="off">
+        </div>
+
+        <div class="form-group" id="yincang7">
+            <label for="add-shishoudunwei">实收吨位</label>
+            <input id="add-shishoudunwei" name="shishoudunwei" type="text" class="form-control" autocomplete="off">
+        </div>
+
+        <label><span style="color: red">*</span>是否产生杂费</label>
+        <div class="form-group">
+            <label for="add-isZafei">是</label>
+            <input id="add-isZafei" name="zafei" type="radio"  style="width: 5%">
+            <label for="add-notZafei">否</label>
+            <input id="add-notZafei" name="zafei" type="radio"  style="width: 5%">
+        </div>
+
+        <div id="yincang4">
+            <label>杂费详情</label>
+            <div class="form-group">
+                <label>(1) [多选]车辆类</label>
+                <span style="display:inline-block;width: 100%">
+                <input onclick="javascript:cheliang()" name="cheliang_feiyong" type="checkbox"> 维修
+            </span>
+                <span style="display:inline-block;width: 100%">
+                <input onclick="javascript:cheliang()" name="cheliang_feiyong" type="checkbox"> 补胎
+            </span>
+                <span style="display:inline-block;width: 100%">
+                <input onclick="javascript:cheliang()" name="cheliang_feiyong" type="checkbox"> 洗车
+            </span>
+                <span style="display:inline-block;width: 100%">
+                <input onclick="javascript:cheliang()" name="cheliang_feiyong" type="checkbox"> 加水
+            </span>
+                <span style="display:inline-block;width: 100%">
+                <input onclick="javascript:cheliang()" name="cheliang_feiyong" type="checkbox"> 停车费
+            </span>
+                <span style="display:inline-block;width: 100%">
+                <input onclick="javascript:cheliang()" name="cheliang_feiyong" type="checkbox"> 其他
+                <input type="text" class="form-control" placeholder="请输入">
+            </span>
+
+                <label style="margin-top: 20px">(2) [多选]生活类</label>
+                <span style="display:inline-block;width: 100%">
+                <input onclick="javascript:shenghuo()" name="shenghuo_feiyong" type="checkbox"> 住宿
+            </span>
+                <span style="display:inline-block;width: 100%">
+                <input onclick="javascript:shenghuo()" name="shenghuo_feiyong" type="checkbox"> 核酸
+            </span>
+                <span style="display:inline-block;width: 100%">
+                <input onclick="javascript:shenghuo()" name="shenghuo_feiyong" type="checkbox"> 其他未列举费用
+                <input name="shenghuo_feiyong" type="text" class="form-control" placeholder="请输入">
+            </span>
+            </div>
+        </div>
+
+
+        <div id="yincang5">
+            <div class="form-group">
+                <label>请上传车辆类费用相关证据</label>
+                <p>维修现场图片提供2张（维修前、维修后）、补胎图片提供3张（损坏处、收费单据、维修好后图片）、其他费用</p>
+            </div>
+            <div class="form-group">
+                <div class="imgBorder">
+                    <img id="img11" onclick="javascript:fileClick('11')" style="width: 150px;height: 100px">
+                </div>
+                <div class="imgBorder">
+                    <img id="img12" onclick="javascript:fileClick('12')" style="width: 150px;height: 100px">
+                </div>
+                <div class="imgBorder">
+                    <img id="img13" onclick="javascript:fileClick('13')" style="width: 150px;height: 100px">
+                </div>
+                <div class="imgBorder">
+                    <img id="img14" onclick="javascript:fileClick('14')" style="width: 150px;height: 100px">
+                </div>
+                <div class="imgBorder">
+                    <img id="img15" onclick="javascript:fileClick('15')" style="width: 150px;height: 100px">
+                </div>
+                <div class="imgBorder">
+                    <img id="img16" onclick="javascript:fileClick('16')" style="width: 150px;height: 100px">
+                </div>
+                <div class="imgBorder">
+                    <img id="img17" onclick="javascript:fileClick('17')" style="width: 150px;height: 100px">
+                </div>
+            </div>
+        </div>
+
+        <div id="yincang6">
+            <div class="form-group">
+                <label>请上传生活类费用相关证据</label>
+                <p>住宿支付证明、核酸支付证明、其他费用证明</p>
+            </div>
+            <div class="form-group">
+                <div class="imgBorder">
+                    <img id="img18" onclick="javascript:fileClick('18')" style="width: 150px;height: 100px">
+                </div>
+                <div class="imgBorder">
+                    <img id="img19" onclick="javascript:fileClick('19')" style="width: 150px;height: 100px">
+                </div>
+                <div class="imgBorder">
+                    <img id="img20" onclick="javascript:fileClick('20')" style="width: 150px;height: 100px">
+                </div>
+                <div class="imgBorder">
+                    <img id="img21" onclick="javascript:fileClick('21')" style="width: 150px;height: 100px">
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+    <div class="border-top" style="padding-top: 15px;">
+        <button id="add-submit-btn" type="button" class="btn btn-primary" style="width:150px">
+            <i class="bi bi-arrow-bar-up icon"></i>
+            提交
+        </button>
+    </div>
+</div>
+
+
+<div id="add-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">录入</div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form id="add-form-luxian" class="needs-validation">
+                    <div class="form-group">
+                        <label for="add-qidian">起点</label>
+                        <input id="add-qidian" name="qidian" type="text" class="form-control" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-zhongdian">终点</label>
+                        <input id="add-zhongdian" name="zhongdian" type="text" class="form-control" autocomplete="off"
+                               data-required="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-luqiaofei">此段路桥费</label>
+                        <input id="add-luqiaofei" name="luqiaofei" type="number" class="form-control"
+                               autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-gonglishu">此段公里数</label>
+                        <input id="add-gonglishu" name="gonglishu" type="number" class="form-control"
+                               autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-zongyouhao">总油耗</label>
+                        <input id="add-zongyouhao" name="zongyouhao" type="number" class="form-control"
+                               autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-pingjunyouhao">平均油耗</label>
+                        <input id="add-pingjunyouhao" name="pingjunyouhao" type="number" class="form-control"
+                               autocomplete="off">
+                    </div>
+                </form>
+            </div>
+            <div class="border-top" style="padding: 15px;">
+                <button id="add-submit-btn-luxian" type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-up icon"></i>
+                    提交
+                </button>
+                <button id="add-close-btn-luxian" type="button" class="btn btn-primary left-margin">
+                    <i class="bi bi-x-circle icon"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- loading -->
+<div class="modal" id="loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop='static'>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">提示</h4>
+            </div>
+            <div class="modal-body">
+                上传中，请稍候...<span id="result"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="file" id="file1" onchange="javascript:fileUp('1')" hidden="hidden">
+<input type="file" id="file2" onchange="javascript:fileUp('2')" hidden="hidden">
+<input type="file" id="file3" onchange="javascript:fileUp('3')" hidden="hidden">
+<input type="file" id="file4" onchange="javascript:fileUp('4')" hidden="hidden">
+<input type="file" id="file5" onchange="javascript:fileUp('5')" hidden="hidden">
+<input type="file" id="file6" onchange="javascript:fileUp('6')" hidden="hidden">
+<input type="file" id="file7" onchange="javascript:fileUp('7')" hidden="hidden">
+<input type="file" id="file8" onchange="javascript:fileUp('8')" hidden="hidden">
+<input type="file" id="file9" onchange="javascript:fileUp('9')" hidden="hidden">
+<input type="file" id="file10" onchange="javascript:fileUp('10')" hidden="hidden">
+<input type="file" id="file11" onchange="javascript:fileUp('11')" hidden="hidden">
+<input type="file" id="file12" onchange="javascript:fileUp('12')" hidden="hidden">
+<input type="file" id="file13" onchange="javascript:fileUp('13')" hidden="hidden">
+<input type="file" id="file14" onchange="javascript:fileUp('14')" hidden="hidden">
+<input type="file" id="file15" onchange="javascript:fileUp('15')" hidden="hidden">
+<input type="file" id="file16" onchange="javascript:fileUp('16')" hidden="hidden">
+<input type="file" id="file17" onchange="javascript:fileUp('17')" hidden="hidden">
+<input type="file" id="file18" onchange="javascript:fileUp('18')" hidden="hidden">
+<input type="file" id="file19" onchange="javascript:fileUp('19')" hidden="hidden">
+<input type="file" id="file20" onchange="javascript:fileUp('20')" hidden="hidden">
+<input type="file" id="file21" onchange="javascript:fileUp('21')" hidden="hidden">
+
+
+</body>
+</html>

@@ -163,16 +163,18 @@ function setTable(data) {
         classes: 'table table-hover text-nowrap table table-bordered',
         idField: 'id',
         pagination: true,
-        pageSize: 20,//单页记录数
-        clickToSelect: true,
+        pageSize: 50,//单页记录数
+        //clickToSelect: true,
         locale: 'zh-CN',
         toolbar: '#table-toolbar',
         toolbarAlign: 'left',
         theadClasses: "thead-light",//这里设置表头样式
         style: 'table-layout:fixed',
-        height: document.body.clientHeight * 0.85,
+        height: document.body.clientHeight * 0.93,
         columns: [
             {
+                checkbox: true,
+            }, {
                 field: '',
                 title: '序号',
                 align: 'center',
@@ -199,24 +201,6 @@ function setTable(data) {
                 sortable: true,
                 width: 150,
             }, {
-                field: 'lianxiren',
-                title: '联系人',
-                align: 'center',
-                sortable: true,
-                width: 100,
-            }, {
-                field: 'phone',
-                title: '联系电话',
-                align: 'center',
-                sortable: true,
-                width: 100,
-            }, {
-                field: 'address',
-                title: '客户地址',
-                align: 'center',
-                sortable: true,
-                width: 200,
-            }, {
                 field: 'remarks',
                 title: '备注',
                 align: 'center',
@@ -224,13 +208,13 @@ function setTable(data) {
                 width: 150,
             }
         ],
-        onClickRow: function (row, el) {
-            let isSelect = $(el).hasClass('selected');
-            if (isSelect) {
-                $(el).removeClass('selected')
-            } else {
-                $(el).addClass('selected')
-            }
-        }
+        // onClickRow: function (row, el) {
+        //     let isSelect = $(el).hasClass('selected');
+        //     if (isSelect) {
+        //         $(el).removeClass('selected')
+        //     } else {
+        //         $(el).addClass('selected')
+        //     }
+        // }
     })
 }

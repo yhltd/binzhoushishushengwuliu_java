@@ -16,7 +16,7 @@ $(function () {
     }
     $.session.set('onload_url', '')
 
-})
+});
 
 function $ajax(options, isLoading, loadingEl, success) {
     $.ajax({

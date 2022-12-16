@@ -26,40 +26,37 @@
 </head>
 
 <body class="pt-2">
-<div class="top-toolbar row">
-    <div class="col-md-3 mb-2">
-        <input id="name" type="text" class="form-control" placeholder="姓名" autocomplete="off">
+
+<div id="table-toolbar">
+    <div class="btn-group" role="group" style="width: 700px">
+        <button id="refresh-btn" class="btn btn-primary" title="刷新">
+            <i class="bi bi-arrow-clockwise icon"></i>
+        </button>
+        <button id="add-btn" class="btn btn-primary" title="新增">
+            <i class="bi bi-plus-square icon"></i>
+        </button>
+        <button id="update-btn" class="btn btn-primary" title="修改">
+            <i class="bi bi-pencil-square icon"></i>
+        </button>
+        <button id="delete-btn" class="btn btn-primary" title="删除">
+            <i class="bi bi-trash icon"></i>
+        </button>
+        <a class="btn btn-primary" style="color: white;padding-top: 8px">当前页：司机信息</a>
     </div>
-    <div class="col-md-3 mb-2">
-        <input id="chepai" type="text" class="form-control" placeholder="车牌" autocomplete="off">
+
+    <div class="col-md-3 mb-2" style="margin-bottom: 0!important;">
+<!--        <input id="name" type="text" class="form-control" placeholder="姓名" autocomplete="off">-->
+        <select id="name"  class="form-control"></select>
     </div>
-    <div class="col-md-2 mb-2">
+    <div class="col-md-3 mb-2" style="margin-bottom: 0!important;">
+<!--        <input id="chepai" type="text" class="form-control" placeholder="车牌" autocomplete="off">-->
+        <select id="chepai"  class="form-control"></select>
+    </div>
+    <div class="col-md-2 mb-2" style="margin-bottom: 0!important;">
         <button id="select-btn" class="btn btn-primary">
             <i class="bi bi-search icon"></i>
             查询
         </button>
-    </div>
-</div>
-
-<div id="table-toolbar">
-    <div class="btn-group" role="group">
-        <button id="refresh-btn" class="btn btn-primary">
-            <i class="bi bi-arrow-clockwise icon"></i>
-            刷新
-        </button>
-        <button id="add-btn" class="btn btn-primary">
-            <i class="bi bi-plus-square icon"></i>
-            新增
-        </button>
-        <button id="update-btn" class="btn btn-primary">
-            <i class="bi bi-pencil-square icon"></i>
-            修改
-        </button>
-        <button id="delete-btn" class="btn btn-primary">
-            <i class="bi bi-trash icon"></i>
-            删除
-        </button>
-        <a class="btn btn-primary" style="color: white;padding-top: 8px">当前页：司机信息</a>
     </div>
 </div>
 <input type="file" id="file" hidden="hidden">
@@ -256,6 +253,8 @@
         </div>
     </div>
 </div>
+
+
 
 </body>
 </html>

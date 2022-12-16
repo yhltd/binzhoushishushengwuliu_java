@@ -28,4 +28,10 @@ public interface DriverMapper extends BaseMapper<Driver> {
 
     @Select("select * from driver_info where id=#{id} and filepath is not null ")
     List<Driver> getListById(int id);
+
+    @Select("select name from driver_info group by name ")
+    List<Driver> getName();
+
+    @Select("select chepai from driver_info group by chepai ")
+    List<Driver> getChepai();
 }

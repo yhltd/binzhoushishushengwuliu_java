@@ -43,4 +43,16 @@ public class CombinationServiceImpl extends ServiceImpl<CombinationMapper, Combi
     public boolean delete(List<Integer> idList) {
         return removeByIds(idList);
     }
+
+    @Override
+    public List<Combination> getZhujia() {
+        return combinationMapper.getZhujia();
+    }
+
+    @Override
+    public List<Combination> getFujia() {
+        return combinationMapper.getFujia();
+    }
+
+
 }

@@ -52,4 +52,14 @@ public class DriverServiceImpl extends ServiceImpl<DriverMapper, Driver> impleme
     public List<Driver> getListById(int id) {
         return driverMapper.getListById(id);
     }
+
+    @Override
+    public List<Driver> getName() {
+        return driverMapper.getName();
+    }
+
+    @Override
+    public List<Driver> getChepai() {
+        return driverMapper.getChepai();
+    }
 }

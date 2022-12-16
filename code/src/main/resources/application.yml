@@ -1,6 +1,8 @@
 server:
   port: 8100
   max-http-header-size: 100000
+web:
+  upload-path: C:/profile
 spring:
   servlet:
     multipart:
@@ -22,7 +24,7 @@ spring:
     static-path-pattern: /**
   web:
     resources:
-      static-locations: classpath:/templates/,classpath:/static/
+      static-locations: file:${web.upload-path},classpath:/templates/,classpath:/static/
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

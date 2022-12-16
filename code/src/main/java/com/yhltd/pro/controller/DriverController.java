@@ -77,6 +77,41 @@ public class DriverController {
         }
     }
 
+    /**
+     * 下拉
+     *
+     * @return ResultInfo
+     */
+    @RequestMapping("/getName")
+    public ResultInfo getName() {
+        try {
+            List<Driver> getList = driverService.getName();
+            return ResultInfo.success("获取成功", getList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("获取失败：{}", e.getMessage());
+            return ResultInfo.error("错误!");
+        }
+    }
+
+    /**
+     * 下拉
+     *
+     * @return ResultInfo
+     */
+    @RequestMapping("/getChepai")
+    public ResultInfo getChepai() {
+        try {
+            List<Driver> getList = driverService.getChepai();
+            return ResultInfo.success("获取成功", getList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("获取失败：{}", e.getMessage());
+            return ResultInfo.error("错误!");
+        }
+    }
+
+
     @RequestMapping("/queryList")
     public ResultInfo queryList(HttpSession session, String name, String chepai) {
         UserInfo userInfo = GsonUtil.toEntity(SessionUtil.getToken(session), UserInfo.class);

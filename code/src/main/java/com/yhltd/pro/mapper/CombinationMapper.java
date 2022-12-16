@@ -21,4 +21,10 @@ public interface CombinationMapper extends BaseMapper<Combination> {
 
     @Select("select * from combination where (zhujia like concat('%',#{name},'%') or fujia like concat('%',#{name},'%')) and chepai like concat('%',#{chepai},'%')  ")
     List<Combination> queryList(String chepai, String name);
+
+    @Select("select zhujia from combination where zhujia!='' group by zhujia")
+    List<Combination> getZhujia();
+
+    @Select("select fujia from combination where fujia!='' group by fujia")
+    List<Combination> getFujia();
 }

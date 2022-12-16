@@ -1,5 +1,7 @@
 let operation;
 let fileId = "";
+let shujvId = "";
+let fileColumn = "";
 
 function getList() {
     $('#ks').val("");
@@ -7,16 +9,49 @@ function getList() {
     $('#chetou').val("");
     $ajax({
         type: 'post',
-        url: '/shujv/getList',
+        url: '/shujv/queryList',
+        data:{
+            ks:getFirstDay(),
+            js:getLastDay(),
+            chetou:'',
+        },
     }, false, '', function (res) {
         if (res.code == 200) {
             setTable(res.data);
-            // $("#userTable").colResizable({
-            //     liveDrag: true,
-            //     gripInnerHtml: "<div class='grip'></div>",
-            //     draggingClass: "dragging",
-            //     resizeMode: 'fit'
-            // });
+        }
+    })
+}
+
+
+function getFirstDay(){
+    var y = new Date().getFullYear(); //获取年份
+    var m = new Date().getMonth() + 1; //获取月份
+    var d = '01'
+    m = m < 10 ? '0' + m : m; //月份补 0
+
+    return [y,m,d].join("-")
+}
+function getLastDay(){
+    var y = new Date().getFullYear(); //获取年份
+    var m = new Date().getMonth() + 1; //获取月份
+    var d = new Date(y, m, 0).getDate(); //获取当月最后一日
+    m = m < 10 ? '0' + m : m; //月份补 0
+    d = d < 10 ? '0' + d : d; //日数补 0
+
+    return [y,m,d].join("-")
+}
+
+
+//下拉
+function getChetou() {
+    $ajax({
+        type: 'post',
+        url: '/shujv/getChetou',
+    }, false, '', function (res) {
+        if (res.code == 200) {
+            for (var i = 0; i < res.data.length; i++) {
+                $("#chetou").append("<option>" + res.data[i].chetou + "</option>");
+            }
         }
     })
 }
@@ -119,6 +154,7 @@ function getFileList(id) {
 
 $(function () {
     getList();
+    getChetou();
 
     $('#select-btn').click(function () {
         var ks = $('#ks').val();
@@ -152,6 +188,9 @@ $(function () {
 
     //点击新增按钮显示弹窗
     $("#add-btn").click(function () {
+        if($.session.get('power')=="其他"||$.session.get('power')=="审核人"){
+            $('#add-kehu-yincang').hide();
+        }
         $('#add-modal').modal('show');
     });
 
@@ -191,6 +230,9 @@ $(function () {
         if (rows.length > 1 || rows.length == 0) {
             alert('请选择一条数据修改!');
             return;
+        }
+        if($.session.get('power')=="其他"||$.session.get('power')=="审核人"){
+            $('#update-kehu-yincang').hide();
         }
         $('#update-modal').modal('show');
         setForm(rows[0].data, '#update-form');
@@ -528,12 +570,6 @@ $(function () {
         var file = document.getElementById("file").files;
         var formData = new FormData();
         var filename = $('#filename').val();
-        if (filename == "") {
-            alert("请先填写文件名！");
-            var fileInput = document.getElementById('file');
-            fileInput.value = '';
-            return
-        }
         if (file.length == 0) {
             alert("请选择文件");
             return
@@ -545,9 +581,10 @@ $(function () {
         }
         formData.append("filename", filename);
         formData.append("id", fileId);
+        formData.append("column", fileColumn);
         $ajax({
             type: 'post',
-            url: '/filetable/add',
+            url: '/shujv/fileUp',
             data: formData,
             async: true,
             cache: false,//不设置缓存
@@ -559,9 +596,7 @@ $(function () {
                 formData = new FormData();
                 var fileInput = document.getElementById('file');
                 fileInput.value = '';
-                $('#up-file-modal').modal('hide');
-                getFileList(fileId);
-                $('#filename').val("");
+                getList();
                 //影藏
                 $('#loading').modal('hide');
             } else {
@@ -615,9 +650,165 @@ $(function () {
             return;
         }
         $.each(rows, function (index, row) {
-            window.open("/filetable/getFile?filepath="+row.data.filepath);
+            window.open("/filetable/getFile?filepath=" + row.data.filepath);
         });
     });
+
+    //隐藏列
+    $('#yincang-btn').click(function () {
+        var yincang = $('#yincang').val();
+        if (yincang == "提货日期") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'thRiqi');
+        } else if (yincang == "卸货日期") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'xhRiqi');
+        } else if (yincang == "车头") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'chetou');
+        } else if (yincang == "挂车") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'guache');
+        } else if (yincang == "主驾") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'zhujia');
+        } else if (yincang == "副驾") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'fujia');
+        } else if (yincang == "电话号码") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'phone');
+        } else if (yincang == "客户") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'kehu');
+        } else if (yincang == "出厂/起") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'chuchang');
+        } else if (yincang == "入场/止") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'ruchang');
+        } else if (yincang == "品名") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'item');
+        } else if (yincang == "提货数量") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'thNum');
+        } else if (yincang == "收货数量") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'shNum');
+        } else if (yincang == "总里程") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'lichang');
+        } else if (yincang == "本次里程") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'btLicheng');
+        } else if (yincang == "本次加油") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'bcJiayou');
+        } else if (yincang == "100KM油耗") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'youhao');
+        } else if (yincang == "每公升行驶里程") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'xingshilicheng');
+        } else if (yincang == "百吨油耗") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'baidunyouhao');
+        } else if (yincang == "尿素") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'niaosu');
+        } else if (yincang == "磅费") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'bangfei');
+        } else if (yincang == "ETC") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'etc');
+        } else if (yincang == "现金") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'xianjin');
+        } else if (yincang == "修理费") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'xiulifei');
+        } else if (yincang == "洗车") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'xiche');
+        } else if (yincang == "加水") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'jiashui');
+        } else if (yincang == "车费") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'chefei');
+        } else if (yincang == "停车") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'tingche');
+        } else if (yincang == "住宿") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'zhusu');
+        } else if (yincang == "杂费") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'zafei');
+        } else if (yincang == "生活费") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'shenghuofei');
+        } else if (yincang == "运费") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'yunfei');
+        } else if (yincang == "交警罚款") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'jiaojingfakuan');
+        } else if (yincang == "合计") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'heji');
+        } else if (yincang == "收费站") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'shoufeizhan');
+        } else if (yincang == "备注信息") {
+            $('#shujvTable').bootstrapTable('hideColumn', 'beizhu');
+        }
+    });
+    //显示列
+    $('#xianshi-btn').click(function () {
+        var yincang = $('#yincang').val();
+        if (yincang == "提货日期") {
+            $('#shujvTable').bootstrapTable('showColumn', 'thRiqi');
+        } else if (yincang == "卸货日期") {
+            $('#shujvTable').bootstrapTable('showColumn', 'xhRiqi');
+        } else if (yincang == "车头") {
+            $('#shujvTable').bootstrapTable('showColumn', 'chetou');
+        } else if (yincang == "挂车") {
+            $('#shujvTable').bootstrapTable('showColumn', 'guache');
+        } else if (yincang == "主驾") {
+            $('#shujvTable').bootstrapTable('showColumn', 'zhujia');
+        } else if (yincang == "副驾") {
+            $('#shujvTable').bootstrapTable('showColumn', 'fujia');
+        } else if (yincang == "电话号码") {
+            $('#shujvTable').bootstrapTable('showColumn', 'phone');
+        } else if (yincang == "客户") {
+            $('#shujvTable').bootstrapTable('showColumn', 'kehu');
+        } else if (yincang == "出厂/起") {
+            $('#shujvTable').bootstrapTable('showColumn', 'chuchang');
+        } else if (yincang == "入场/止") {
+            $('#shujvTable').bootstrapTable('showColumn', 'ruchang');
+        } else if (yincang == "品名") {
+            $('#shujvTable').bootstrapTable('showColumn', 'item');
+        } else if (yincang == "提货数量") {
+            $('#shujvTable').bootstrapTable('showColumn', 'thNum');
+        } else if (yincang == "收货数量") {
+            $('#shujvTable').bootstrapTable('showColumn', 'shNum');
+        } else if (yincang == "总里程") {
+            $('#shujvTable').bootstrapTable('showColumn', 'lichang');
+        } else if (yincang == "本次里程") {
+            $('#shujvTable').bootstrapTable('showColumn', 'btLicheng');
+        } else if (yincang == "本次加油") {
+            $('#shujvTable').bootstrapTable('showColumn', 'bcJiayou');
+        } else if (yincang == "100KM油耗") {
+            $('#shujvTable').bootstrapTable('showColumn', 'youhao');
+        } else if (yincang == "每公升行驶里程") {
+            $('#shujvTable').bootstrapTable('showColumn', 'xingshilicheng');
+        } else if (yincang == "百吨油耗") {
+            $('#shujvTable').bootstrapTable('showColumn', 'baidunyouhao');
+        } else if (yincang == "尿素") {
+            $('#shujvTable').bootstrapTable('showColumn', 'niaosu');
+        } else if (yincang == "磅费") {
+            $('#shujvTable').bootstrapTable('showColumn', 'bangfei');
+        } else if (yincang == "ETC") {
+            $('#shujvTable').bootstrapTable('showColumn', 'etc');
+        } else if (yincang == "现金") {
+            $('#shujvTable').bootstrapTable('showColumn', 'xianjin');
+        } else if (yincang == "修理费") {
+            $('#shujvTable').bootstrapTable('showColumn', 'xiulifei');
+        } else if (yincang == "洗车") {
+            $('#shujvTable').bootstrapTable('showColumn', 'xiche');
+        } else if (yincang == "加水") {
+            $('#shujvTable').bootstrapTable('showColumn', 'jiashui');
+        } else if (yincang == "车费") {
+            $('#shujvTable').bootstrapTable('showColumn', 'chefei');
+        } else if (yincang == "停车") {
+            $('#shujvTable').bootstrapTable('showColumn', 'tingche');
+        } else if (yincang == "住宿") {
+            $('#shujvTable').bootstrapTable('showColumn', 'zhusu');
+        } else if (yincang == "杂费") {
+            $('#shujvTable').bootstrapTable('showColumn', 'zafei');
+        } else if (yincang == "生活费") {
+            $('#shujvTable').bootstrapTable('showColumn', 'shenghuofei');
+        } else if (yincang == "运费") {
+            $('#shujvTable').bootstrapTable('showColumn', 'yunfei');
+        } else if (yincang == "交警罚款") {
+            $('#shujvTable').bootstrapTable('showColumn', 'jiaojingfakuan');
+        } else if (yincang == "合计") {
+            $('#shujvTable').bootstrapTable('showColumn', 'heji');
+        } else if (yincang == "收费站") {
+            $('#shujvTable').bootstrapTable('showColumn', 'shoufeizhan');
+        } else if (yincang == "备注信息") {
+            $('#shujvTable').bootstrapTable('showColumn', 'beizhu');
+        }
+
+    })
 
 
 });
@@ -633,8 +824,8 @@ function setTable(data) {
         classes: 'table table-hover text-nowrap table table-bordered',
         idField: 'id',
         pagination: true,
-        pageSize: 20,//单页记录数
-        clickToSelect: true,
+        pageSize: 50,//单页记录数
+        //clickToSelect: true,
         locale: 'zh-CN',
         toolbar: '#table-toolbar',
         toolbarAlign: 'left',
@@ -643,6 +834,8 @@ function setTable(data) {
         height: document.body.clientHeight * 0.85,
         columns: [
             {
+                checkbox: true,
+            }, {
                 field: '',
                 title: '序号',
                 align: 'center',
@@ -867,26 +1060,346 @@ function setTable(data) {
                 sortable: true,
                 width: 200,
             }, {
-                field: '',
-                title: '查看文件',
+                field: 'file1',
+                title: '提货磅单图片',
                 align: 'center',
                 sortable: true,
-                width: 100,
+                width: 150,
                 formatter: function (value, row, index) {
-                    return '<button onclick="javascript:getFileList(' + row.id + ')" class="btn btn-primary">查看</button>'
+                    if (value != null && value != "") {
+                        var a = value.split("/");
+                        a = "/" + a[a.length - 1];
+                        return '<a href="' + a + '" style="display:block" target="_blank"><img src="' + a + '" style="width: 50px;"></a> <button onclick="javascript:fileUp(' + row.id + ',' + '\'file1\'' + ')" class="btn btn-small btn-primary">上传</button> <button onclick="javascript:fileDel(' + row.id + ',' + '\'file1\'' + ')" class="btn btn-small btn-primary">删除</button>'
+                    } else {
+                        return '<button onclick="javascript:fileUp(' + row.id + ',' + '\'file1\'' + ')" class="btn btn-small btn-primary">上传</button> </a>'
+                    }
+                }
+            }, {
+                field: 'file2',
+                title: '仪表台盘照片1',
+                align: 'center',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    if (value != null && value != "") {
+                        var a = value.split("/");
+                        a = "/" + a[a.length - 1];
+                        return '<a href="' + a + '" style="display:block" target="_blank"><img src="' + a + '" style="width: 50px;"></a> <button onclick="javascript:fileUp(' + row.id + ',' + '\'file2\'' + ')" class="btn btn-small btn-primary">上传</button> <button onclick="javascript:fileDel(' + row.id + ',' + '\'file2\'' + ')" class="btn btn-small btn-primary">删除</button>'
+                    } else {
+                        return '<button onclick="javascript:fileUp(' + row.id + ',' + '\'file2\'' + ')" class="btn btn-small btn-primary">上传</button> </a>'
+                    }
+                }
+            }, {
+                field: 'file3',
+                title: '仪表台盘照片2',
+                align: 'center',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    if (value != null && value != "") {
+                        var a = value.split("/");
+                        a = "/" + a[a.length - 1];
+                        return '<a href="' + a + '" style="display:block" target="_blank"><img src="' + a + '" style="width: 50px;"></a> <button onclick="javascript:fileUp(' + row.id + ',' + '\'file3\'' + ')" class="btn btn-mini btn-primary">上传</button> <button onclick="javascript:fileDel(' + row.id + ',' + '\'file3\'' + ')" class="btn btn-mini btn-primary">删除</button>'
+                    } else {
+                        return '<button onclick="javascript:fileUp(' + row.id + ',' + '\'file3\'' + ')" class="btn btn-mini btn-primary">上传</button>'
+                    }
+                }
+            }, {
+                field: 'file4',
+                title: '仪表台盘照片3',
+                align: 'center',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    if (value != null && value != "") {
+                        var a = value.split("/");
+                        a = "/" + a[a.length - 1];
+                        return '<a href="' + a + '" style="display:block" target="_blank"><img src="' + a + '" style="width: 50px;"></a> <button onclick="javascript:fileUp(' + row.id + ',' + '\'file4\'' + ')" class="btn btn-mini btn-primary">上传</button> <button onclick="javascript:fileDel(' + row.id + ',' + '\'file4\'' + ')" class="btn btn-mini btn-primary">删除</button>'
+                    } else {
+                        return '<button onclick="javascript:fileUp(' + row.id + ',' + '\'file4\'' + ')" class="btn btn-mini btn-primary">上传</button>'
+                    }
+                }
+            }, {
+                field: 'file5',
+                title: '仪表台盘照片4',
+                align: 'center',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    if (value != null && value != "") {
+                        var a = value.split("/");
+                        a = "/" + a[a.length - 1];
+                        return '<a href="' + a + '" style="display:block" target="_blank"><img src="' + a + '" style="width: 50px;"></a> <button onclick="javascript:fileUp(' + row.id + ',' + '\'file5\'' + ')" class="btn btn-mini btn-primary">上传</button> <button onclick="javascript:fileDel(' + row.id + ',' + '\'file5\'' + ')" class="btn btn-mini btn-primary">删除</button>'
+                    } else {
+                        return '<button onclick="javascript:fileUp(' + row.id + ',' + '\'file5\'' + ')" class="btn btn-mini btn-primary">上传</button>'
+                    }
+                }
+            }, {
+                field: 'file6',
+                title: '加油归零前仪表照片1',
+                align: 'center',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    if (value != null && value != "") {
+                        var a = value.split("/");
+                        a = "/" + a[a.length - 1];
+                        return '<a href="' + a + '" style="display:block" target="_blank"><img src="' + a + '" style="width: 50px;"></a> <button onclick="javascript:fileUp(' + row.id + ',' + '\'file6\'' + ')" class="btn btn-mini btn-primary">上传</button> <button onclick="javascript:fileDel(' + row.id + ',' + '\'file6\'' + ')" class="btn btn-mini btn-primary">删除</button>'
+                    } else {
+                        return '<button onclick="javascript:fileUp(' + row.id + ',' + '\'file6\'' + ')" class="btn btn-mini btn-primary">上传</button>'
+                    }
+                }
+            }, {
+                field: 'file7',
+                title: '加油归零前仪表照片2',
+                align: 'center',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    if (value != null && value != "") {
+                        var a = value.split("/");
+                        a = "/" + a[a.length - 1];
+                        return '<a href="' + a + '" style="display:block" target="_blank"><img src="' + a + '" style="width: 50px;"></a> <button onclick="javascript:fileUp(' + row.id + ',' + '\'file7\'' + ')" class="btn btn-mini btn-primary">上传</button> <button onclick="javascript:fileDel(' + row.id + ',' + '\'file7\'' + ')" class="btn btn-mini btn-primary">删除</button>'
+                    } else {
+                        return '<button onclick="javascript:fileUp(' + row.id + ',' + '\'file7\'' + ')" class="btn btn-mini btn-primary">上传</button>'
+                    }
+                }
+            }, {
+                field: 'file8',
+                title: '加油归零前仪表照片3',
+                align: 'center',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    if (value != null && value != "") {
+                        var a = value.split("/");
+                        a = "/" + a[a.length - 1];
+                        return '<a href="' + a + '" style="display:block" target="_blank"><img src="' + a + '" style="width: 50px;"></a> <button onclick="javascript:fileUp(' + row.id + ',' + '\'file8\'' + ')" class="btn btn-mini btn-primary">上传</button> <button onclick="javascript:fileDel(' + row.id + ',' + '\'file8\'' + ')" class="btn btn-mini btn-primary">删除</button>'
+                    } else {
+                        return '<button onclick="javascript:fileUp(' + row.id + ',' + '\'file8\'' + ')" class="btn btn-mini btn-primary">上传</button>'
+                    }
+                }
+            }, {
+                field: 'file9',
+                title: '加油归零前仪表照片4',
+                align: 'center',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    if (value != null && value != "") {
+                        var a = value.split("/");
+                        a = "/" + a[a.length - 1];
+                        return '<a href="' + a + '" style="display:block" target="_blank"><img src="' + a + '" style="width: 50px;"></a> <button onclick="javascript:fileUp(' + row.id + ',' + '\'file9\'' + ')" class="btn btn-mini btn-primary">上传</button> <button onclick="javascript:fileDel(' + row.id + ',' + '\'file9\'' + ')" class="btn btn-mini btn-primary">删除</button>'
+                    } else {
+                        return '<button onclick="javascript:fileUp(' + row.id + ',' + '\'file9\'' + ')" class="btn btn-mini btn-primary">上传</button>'
+                    }
+                }
+            }, {
+                field: 'file10',
+                title: '加油归零前仪表照片5',
+                align: 'center',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    if (value != null && value != "") {
+                        var a = value.split("/");
+                        a = "/" + a[a.length - 1];
+                        return '<a href="' + a + '" style="display:block" target="_blank"><img src="' + a + '" style="width: 50px;"></a> <button onclick="javascript:fileUp(' + row.id + ',' + '\'file10\'' + ')" class="btn btn-mini btn-primary">上传</button> <button onclick="javascript:fileDel(' + row.id + ',' + '\'file10\'' + ')" class="btn btn-mini btn-primary">删除</button>'
+                    } else {
+                        return '<button onclick="javascript:fileUp(' + row.id + ',' + '\'file10\'' + ')" class="btn btn-mini btn-primary">上传</button>'
+                    }
+                }
+            }, {
+                field: 'file11',
+                title: '车辆类费用照片1',
+                align: 'center',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    if (value != null && value != "") {
+                        var a = value.split("/");
+                        a = "/" + a[a.length - 1];
+                        return '<a href="' + a + '" style="display:block" target="_blank"><img src="' + a + '" style="width: 50px;"></a> <button onclick="javascript:fileUp(' + row.id + ',' + '\'file11\'' + ')" class="btn btn-mini btn-primary">上传</button> <button onclick="javascript:fileDel(' + row.id + ',' + '\'file11\'' + ')" class="btn btn-mini btn-primary">删除</button>'
+                    } else {
+                        return '<button onclick="javascript:fileUp(' + row.id + ',' + '\'file11\'' + ')" class="btn btn-mini btn-primary">上传</button>'
+                    }
+                }
+            }, {
+                field: 'file12',
+                title: '车辆类费用照片2',
+                align: 'center',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    if (value != null && value != "") {
+                        var a = value.split("/");
+                        a = "/" + a[a.length - 1];
+                        return '<a href="' + a + '" style="display:block" target="_blank"><img src="' + a + '" style="width: 50px;"></a> <button onclick="javascript:fileUp(' + row.id + ',' + '\'file12\'' + ')" class="btn btn-mini btn-primary">上传</button> <button onclick="javascript:fileDel(' + row.id + ',' + '\'file12\'' + ')" class="btn btn-mini btn-primary">删除</button>'
+                    } else {
+                        return '<button onclick="javascript:fileUp(' + row.id + ',' + '\'file12\'' + ')" class="btn btn-mini btn-primary">上传</button>'
+                    }
+                }
+            }, {
+                field: 'file13',
+                title: '车辆类费用照片3',
+                align: 'center',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    if (value != null && value != "") {
+                        var a = value.split("/");
+                        a = "/" + a[a.length - 1];
+                        return '<a href="' + a + '" style="display:block" target="_blank"><img src="' + a + '" style="width: 50px;"></a> <button onclick="javascript:fileUp(' + row.id + ',' + '\'file13\'' + ')" class="btn btn-mini btn-primary">上传</button> <button onclick="javascript:fileDel(' + row.id + ',' + '\'file13\'' + ')" class="btn btn-mini btn-primary">删除</button>'
+                    } else {
+                        return '<button onclick="javascript:fileUp(' + row.id + ',' + '\'file13\'' + ')" class="btn btn-mini btn-primary">上传</button>'
+                    }
+                }
+            }, {
+                field: 'file14',
+                title: '车辆类费用照片4',
+                align: 'center',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    if (value != null && value != "") {
+                        var a = value.split("/");
+                        a = "/" + a[a.length - 1];
+                        return '<a href="' + a + '" style="display:block" target="_blank"><img src="' + a + '" style="width: 50px;"></a> <button onclick="javascript:fileUp(' + row.id + ',' + '\'file14\'' + ')" class="btn btn-mini btn-primary">上传</button> <button onclick="javascript:fileDel(' + row.id + ',' + '\'file14\'' + ')" class="btn btn-mini btn-primary">删除</button>'
+                    } else {
+                        return '<button onclick="javascript:fileUp(' + row.id + ',' + '\'file14\'' + ')" class="btn btn-mini btn-primary">上传</button>'
+                    }
+                }
+            }, {
+                field: 'file6',
+                title: '车辆类费用照片5',
+                align: 'center',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    if (value != null && value != "") {
+                        var a = value.split("/");
+                        a = "/" + a[a.length - 1];
+                        return '<a href="' + a + '" style="display:block" target="_blank"><img src="' + a + '" style="width: 50px;"></a> <button onclick="javascript:fileUp(' + row.id + ',' + '\'file15\'' + ')" class="btn btn-mini btn-primary">上传</button> <button onclick="javascript:fileDel(' + row.id + ',' + '\'file15\'' + ')" class="btn btn-mini btn-primary">删除</button>'
+                    } else {
+                        return '<button onclick="javascript:fileUp(' + row.id + ',' + '\'file15\'' + ')" class="btn btn-mini btn-primary">上传</button>'
+                    }
+                }
+            }, {
+                field: 'file16',
+                title: '车辆类费用照片6',
+                align: 'center',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    if (value != null && value != "") {
+                        var a = value.split("/");
+                        a = "/" + a[a.length - 1];
+                        return '<a href="' + a + '" style="display:block" target="_blank"><img src="' + a + '" style="width: 50px;"></a> <button onclick="javascript:fileUp(' + row.id + ',' + '\'file16\'' + ')" class="btn btn-mini btn-primary">上传</button> <button onclick="javascript:fileDel(' + row.id + ',' + '\'file16\'' + ')" class="btn btn-mini btn-primary">删除</button>'
+                    } else {
+                        return '<button onclick="javascript:fileUp(' + row.id + ',' + '\'file16\'' + ')" class="btn btn-mini btn-primary">上传</button>'
+                    }
+                }
+            }, {
+                field: 'file17',
+                title: '车辆类费用照片7',
+                align: 'center',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    if (value != null && value != "") {
+                        var a = value.split("/");
+                        a = "/" + a[a.length - 1];
+                        return '<a href="' + a + '" style="display:block" target="_blank"><img src="' + a + '" style="width: 50px;"></a> <button onclick="javascript:fileUp(' + row.id + ',' + '\'file17\'' + ')" class="btn btn-mini btn-primary">上传</button> <button onclick="javascript:fileDel(' + row.id + ',' + '\'file17\'' + ')" class="btn btn-mini btn-primary">删除</button>'
+                    } else {
+                        return '<button onclick="javascript:fileUp(' + row.id + ',' + '\'file17\'' + ')" class="btn btn-mini btn-primary">上传</button>'
+                    }
+                }
+            }, {
+                field: 'file18',
+                title: '生活类费用照片1',
+                align: 'center',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    if (value != null && value != "") {
+                        var a = value.split("/");
+                        a = "/" + a[a.length - 1];
+                        return '<a href="' + a + '" style="display:block" target="_blank"><img src="' + a + '" style="width: 50px;"></a> <button onclick="javascript:fileUp(' + row.id + ',' + '\'file18\'' + ')" class="btn btn-mini btn-primary">上传</button> <button onclick="javascript:fileDel(' + row.id + ',' + '\'file18\'' + ')" class="btn btn-mini btn-primary">删除</button>'
+                    } else {
+                        return '<button onclick="javascript:fileUp(' + row.id + ',' + '\'file18\'' + ')" class="btn btn-mini btn-primary">上传</button>'
+                    }
+                }
+            }, {
+                field: 'file19',
+                title: '生活类费用照片2',
+                align: 'center',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    if (value != null && value != "") {
+                        var a = value.split("/");
+                        a = "/" + a[a.length - 1];
+                        return '<a href="' + a + '" style="display:block" target="_blank"><img src="' + a + '" style="width: 50px;"></a> <button onclick="javascript:fileUp(' + row.id + ',' + '\'file19\'' + ')" class="btn btn-mini btn-primary">上传</button> <button onclick="javascript:fileDel(' + row.id + ',' + '\'file19\'' + ')" class="btn btn-mini btn-primary">删除</button>'
+                    } else {
+                        return '<button onclick="javascript:fileUp(' + row.id + ',' + '\'file19\'' + ')" class="btn btn-mini btn-primary">上传</button>'
+                    }
+                }
+            }, {
+                field: 'file20',
+                title: '生活类费用照片3',
+                align: 'center',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    if (value != null && value != "") {
+                        var a = value.split("/");
+                        a = "/" + a[a.length - 1];
+                        return '<a href="' + a + '" style="display:block" target="_blank"><img src="' + a + '" style="width: 50px;"></a> <button onclick="javascript:fileUp(' + row.id + ',' + '\'file20\'' + ')" class="btn btn-mini btn-primary">上传</button> <button onclick="javascript:fileDel(' + row.id + ',' + '\'file20\'' + ')" class="btn btn-mini btn-primary">删除</button>'
+                    } else {
+                        return '<button onclick="javascript:fileUp(' + row.id + ',' + '\'file20\'' + ')" class="btn btn-mini btn-primary">上传</button>'
+                    }
+                }
+            }, {
+                field: 'file21',
+                title: '生活类费用照片4',
+                align: 'center',
+                sortable: true,
+                width: 150,
+                formatter: function (value, row, index) {
+                    if (value != null && value != "") {
+                        var a = value.split("/");
+                        a = "/" + a[a.length - 1];
+                        return '<a href="' + a + '" style="display:block" target="_blank"><img src="' + a + '" style="width: 50px;"></a> <button onclick="javascript:fileUp(' + row.id + ',' + '\'file21\'' + ')" class="btn btn-mini btn-primary">上传</button> <button onclick="javascript:fileDel(' + row.id + ',' + '\'file21\'' + ')" class="btn btn-mini btn-primary">删除</button>'
+                    } else {
+                        return '<button onclick="javascript:fileUp(' + row.id + ',' + '\'file21\'' + ')" class="btn btn-mini btn-primary">上传</button>'
+                    }
                 }
             }
+
+
+            // , {
+            //     field: '',
+            //     title: '查看文件',
+            //     align: 'center',
+            //     sortable: true,
+            //     width: 100,
+            //     formatter: function (value, row, index) {
+            //         return '<button onclick="javascript:getFileList(' + row.id + ')" class="btn btn-primary">查看</button>'
+            //     }
+            // }
         ],
-        onClickRow: function (row, el) {
-            let isSelect = $(el).hasClass('selected');
-            if (isSelect) {
-                $(el).removeClass('selected')
-            } else {
-                $(el).addClass('selected')
-            }
-        }
-    })
+
+        // onClickRow: function (row, el) {
+        //     let isSelect = $(el).hasClass('selected');
+        //     if (isSelect) {
+        //         $(el).removeClass('selected')
+        //     } else {
+        //         $(el).addClass('selected')
+        //     }
+        // }
+    });
 }
+
 
 function setCombinationTable(data) {
     if ($('#show-table-combination').html() != '') {
@@ -1300,5 +1813,28 @@ function setFileTable(data) {
                 width: 100,
             }
         ],
+    })
+}
+
+function fileUp(id, column) {
+    fileId = id;
+    fileColumn = column;
+    $('#file').trigger('click');
+}
+
+
+function fileDel(id, column) {
+    $ajax({
+        type: 'post',
+        url: '/shujv/fileDel',
+        data: {
+            id: id,
+            column: column,
+        }
+    }, false, '', function (res) {
+        if (res.code == 200) {
+            alert(res.msg);
+            getList();
+        }
     })
 }

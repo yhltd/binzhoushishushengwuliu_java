@@ -19,6 +19,9 @@ public interface VehicleMapper extends BaseMapper<Vehicle> {
     @Select("select * from vehicle")
     List<Vehicle> getList();
 
+    @Select("select chepai from vehicle group by chepai")
+    List<Vehicle> getChepai();
+
     @Select("select * from vehicle where chepai like concat('%',#{chepai},'%') ")
     List<Vehicle> queryList(String chepai);
 

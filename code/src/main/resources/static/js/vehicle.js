@@ -18,8 +18,22 @@ function getList() {
     })
 }
 
+function getChepai() {
+    $ajax({
+        type: 'post',
+        url: '/vehicle/getChepai',
+    }, true, '', function (res) {
+        if (res.code == 200) {
+            for (var i=0; i<res.data.length; i++) {
+                $("#value").append("<option>"+res.data[i].chepai+"</option>");
+            }
+        }
+    })
+}
+
 $(function () {
     getList();
+    getChepai();
 
     $('#select-btn').click(function () {
         var value = $('#value').val();
@@ -45,10 +59,16 @@ $(function () {
     $("#add-btn").click(function () {
         $('#add-modal').modal('show');
     });
+    $("#add-btn2").click(function () {
+        $('#add-modal2').modal('show');
+    });
 
     //新增弹窗里点击关闭按钮
     $('#add-close-btn').click(function () {
         $('#add-modal').modal('hide');
+    });
+    $('#add-close-btn2').click(function () {
+        $('#add-modal2').modal('hide');
     });
 
     //新增弹窗里点击提交按钮
@@ -76,6 +96,30 @@ $(function () {
         }
     });
 
+    $("#add-submit-btn2").click(function () {
+        let params = formToJson("#add-form2");
+        if (checkForm('#add-form2')) {
+            $ajax({
+                type: 'post',
+                url: '/vehicle/add',
+                data: JSON.stringify({
+                    addInfo: params,
+                }),
+                dataType: 'json',
+                contentType: 'application/json;charset=utf-8'
+            }, false, '', function (res) {
+                if (res.code == 200) {
+                    alert(res.msg);
+                    $('#add-form2')[0].reset();
+                    getList();
+                    $('#add-close-btn2').click();
+                } else {
+                    alert(res.msg);
+                }
+            })
+        }
+    });
+
     //点击修改按钮显示弹窗
     $('#update-btn').click(function () {
         let rows = getTableSelection('#vehicleTable');
@@ -83,16 +127,25 @@ $(function () {
             alert('请选择一条数据修改!');
             return;
         }
-        $('#update-modal').modal('show');
-        setForm(rows[0].data, '#update-form');
-        $('#update-guochanJinkou').val(rows[0].data.guochanJinkou);
-        $('#update-daiguachefou').val(rows[0].data.daiguachefou);
+        if (rows[0].data.type == "车头") {
+            $('#update-modal').modal('show');
+            setForm(rows[0].data, '#update-form');
+            $('#update-guochanJinkou').val(rows[0].data.guochanJinkou);
+            $('#update-daiguachefou').val(rows[0].data.daiguachefou);
+        } else {
+            $('#update-modal2').modal('show');
+            setForm(rows[0].data, '#update-form2');
+        }
     });
 
     //修改弹窗点击关闭按钮
     $('#update-close-btn').click(function () {
         $('#update-form')[0].reset();
         $('#update-modal').modal('hide');
+    });
+    $('#update-close-btn2').click(function () {
+        $('#update-form2')[0].reset();
+        $('#update-modal2').modal('hide');
     });
 
     //修改弹窗里点击提交按钮
@@ -114,6 +167,33 @@ $(function () {
                         alert(res.msg);
                         $('#update-close-btn').click();
                         $('#update-modal').modal('hide');
+                        getList();
+                    } else {
+                        alert(res.msg);
+                    }
+                })
+            }
+        }
+    });
+
+    $('#update-submit-btn2').click(function () {
+        var msg = confirm("确认要修改吗？");
+        if (msg) {
+            if (checkForm('#update-form2')) {
+                let params = formToJson('#update-form2');
+                $ajax({
+                    type: 'post',
+                    url: '/vehicle/update',
+                    data: {
+                        updateJson: JSON.stringify(params)
+                    },
+                    dataType: 'json',
+                    contentType: 'application/json;charset=utf-8'
+                }, false, '', function (res) {
+                    if (res.code == 200) {
+                        alert(res.msg);
+                        $('#update-close-btn2').click();
+                        $('#update-modal2').modal('hide');
                         getList();
                     } else {
                         alert(res.msg);
@@ -184,6 +264,7 @@ $(function () {
                 fileInput.value = '';
                 //影藏
                 $('#loading').modal('hide');
+                getList();
             } else {
                 alert(res.msg);
                 formData = new FormData();
@@ -207,16 +288,18 @@ function setTable(data) {
         classes: 'table table-hover text-nowrap table table-bordered',
         idField: 'id',
         pagination: true,
-        pageSize: 20,//单页记录数
-        clickToSelect: true,
+        pageSize: 50,//单页记录数
+        //clickToSelect: true,
         locale: 'zh-CN',
         toolbar: '#table-toolbar',
         toolbarAlign: 'left',
         theadClasses: "thead-light",//这里设置表头样式
         style: 'table-layout:fixed',
-        height: document.body.clientHeight * 0.85,
+        height: document.body.clientHeight * 0.93,
         columns: [
             {
+                checkbox: true,
+            }, {
                 field: '',
                 title: '序号',
                 align: 'center',
@@ -224,6 +307,12 @@ function setTable(data) {
                 formatter: function (value, row, index) {
                     return index + 1;
                 }
+            }, {
+                field: 'type',
+                title: '类型',
+                align: 'center',
+                sortable: true,
+                width: 100,
             }, {
                 field: 'chepai',
                 title: '车牌',
@@ -240,16 +329,29 @@ function setTable(data) {
                     return '<button onclick="javascript:fileUp(' + row.id + ')" class="btn btn-primary">上传</button>&nbsp;&nbsp;&nbsp;&nbsp;<button onclick="javascript:fileDown(' + row.id + ')" class="btn btn-primary">下载</button>'
                     //return '<button onclick="javascript:pass(' + row.id + ','+ row.userId +')" class="btn-sm btn-primary">通过</button> <button onclick="javascript:refuse(' + row.id + ','+ row.userId +')" class="btn-sm btn-primary">拒绝</button>'
                 }
+            }, {
+                field: 'filepath',
+                title: '图片',
+                align: 'center',
+                sortable: true,
+                width: 100,
+                formatter: function (value, row, index) {
+                    if (value != null && value != "") {
+                        var a = value.split("/");
+                        a = "/" + a[a.length - 1];
+                        return '<a href="' + a + '" style="display:block" target="_blank"><img src="' + a + '" style="width: 50px;"></a>'
+                    }
+                }
             }
         ],
-        onClickRow: function (row, el) {
-            let isSelect = $(el).hasClass('selected');
-            if (isSelect) {
-                $(el).removeClass('selected')
-            } else {
-                $(el).addClass('selected')
-            }
-        }
+        // onClickRow: function (row, el) {
+        //     let isSelect = $(el).hasClass('selected');
+        //     if (isSelect) {
+        //         $(el).removeClass('selected')
+        //     } else {
+        //         $(el).addClass('selected')
+        //     }
+        // }
     })
 }
 
@@ -260,5 +362,5 @@ function fileUp(id) {
 
 
 function fileDown(id) {
-    window.open("/vehicle/getFile?id="+id);
+    window.open("/vehicle/getFile?id=" + id);
 }

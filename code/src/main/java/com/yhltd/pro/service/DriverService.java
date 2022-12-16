@@ -2,6 +2,7 @@ package com.yhltd.pro.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yhltd.pro.entity.Driver;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,4 +26,8 @@ public interface DriverService extends IService<Driver> {
     boolean fileUp(String filepath, int id);
 
     List<Driver> getListById(int id);
+
+    List<Driver> getName();
+
+    List<Driver> getChepai();
 }

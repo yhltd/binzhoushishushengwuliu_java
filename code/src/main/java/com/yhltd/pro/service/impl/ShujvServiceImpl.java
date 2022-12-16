@@ -47,4 +47,24 @@ public class ShujvServiceImpl extends ServiceImpl<ShujvMapper, Shujv> implements
     public List<Shujv> getSalary(String ks, String js, String name) {
         return shujvMapper.getSalary(ks, js, name);
     }
+
+    @Override
+    public List<Shujv> getChetou() {
+        return shujvMapper.getChetou();
+    }
+
+    @Override
+    public boolean fileUp(String column, int id, String value) {
+        return shujvMapper.fileUp(column, id, value);
+    }
+
+    @Override
+    public boolean fileDel(String column, int id) {
+        return shujvMapper.fileDel(column, id);
+    }
+
+    @Override
+    public List<Shujv> getListById(int id) {
+        return shujvMapper.getListById(id);
+    }
 }

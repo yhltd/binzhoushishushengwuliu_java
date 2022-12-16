@@ -35,7 +35,7 @@
         <input id="js" type="date" class="form-control" autocomplete="off">
     </div>
     <div class="col-md-3 mb-2">
-        <input id="chepai" type="text" class="form-control" placeholder="车头" autocomplete="off">
+        <select id="chepai" class="form-control" ></select>
     </div>
     <div class="col-md-2 mb-2">
         <button id="select-btn" class="btn btn-primary">
@@ -55,6 +55,20 @@
 
 </body>
 <script type="text/javascript">
+    //下拉
+    function getChetou() {
+        $ajax({
+            type: 'post',
+            url: '/shujv/getChetou',
+        }, false, '', function (res) {
+            if (res.code == 200) {
+                for (var i = 0; i < res.data.length; i++) {
+                    $("#chepai").append("<option>" + res.data[i].chetou + "</option>");
+                }
+            }
+        })
+    }
+
     $(function () {
 
         $('#select-btn').click(function () {

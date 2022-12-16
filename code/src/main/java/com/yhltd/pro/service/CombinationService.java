@@ -21,4 +21,8 @@ public interface CombinationService extends IService<Combination> {
     boolean update(Combination combination);
 
     boolean delete(List<Integer> idList);
+
+    List<Combination> getZhujia();
+
+    List<Combination> getFujia();
 }

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>管理系统</title>
+
+    <script type="text/javascript" src="../js/Jquery.js"></script>
+    <!--bootstrap-->
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../bootstrap-4.5.0-dist/icons/bootstrap-icons.css">
+    <script type="text/javascript" src="../bootstrap-4.5.0-dist/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="../js/main.js"></script>
+    <link rel="stylesheet" href="../css/main.css">
+
+    <script type="text/javascript">
+        $(function () {
+            $('a').click(function () {
+                let src = $(this).data('src');
+                if (src != '' && src != undefined) {
+                    if(src=="退出"){
+                        window.location.href="../index.html"
+                    }else{
+                        $('#iframe').attr('src', src);
+                    }
+                    // if ($('#navbarSupportedContent').hasClass('show')) {
+                    //     $('.navbar-toggler').click();
+                    // }
+                }
+            })
+        })
+
+    </script>
+
+    <style>
+        .img-responsive {
+            display: inline-block;
+            height: auto;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body style="padding-top: 60px;margin: 0" class="row bg">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark"
+     style="min-height: 60px;width: 100%;position: absolute;top: 0;left: 0;z-index: 1000000;">
+    <!--    background-color: white !important;-->
+    <a class="navbar-brand mb-0 h1" href="main.html">
+        <img src="../img/logo.png" class="d-inline-block align-top rounded" alt="" style="height: 40px"/>
+        管理系统
+    </a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav float-md-right">
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-src="退出" style="color: white !important;">退出</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-src="" style="color: white !important;">版本：v0.2</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="embed-responsive embed-responsive-1by1 h-100">
+    <iframe id="iframe" class="embed-responsive-item" src="shujv-driver.html"></iframe>
+</div>
+</body>
+</html>

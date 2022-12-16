@@ -17,8 +17,22 @@ function getList() {
     })
 }
 
+function getName() {
+    $ajax({
+        type: 'post',
+        url: '/driver/getName',
+    }, false, '', function (res) {
+        if (res.code == 200) {
+            for (var i = 0; i < res.data.length; i++) {
+                $("#name").append("<option>" + res.data[i].name + "</option>");
+            }
+        }
+    })
+}
+
 $(function () {
     getList();
+    getName();
 
     $('#refresh-btn').click(function () {
         getList();
@@ -56,7 +70,7 @@ function setTable(data) {
         classes: 'table table-hover text-nowrap table table-bordered',
         idField: 'id',
         pagination: true,
-        pageSize: 20,//单页记录数
+        pageSize: 50,//单页记录数
         locale: 'zh-CN',
         toolbar: '#table-toolbar',
         toolbarAlign: 'left',
@@ -85,26 +99,14 @@ function setTable(data) {
                 sortable: true,
                 width: 100,
             }, {
-                field: 'zhujia',
-                title: '主驾',
+                field: 'heji',
+                title: '司机',
                 align: 'center',
                 sortable: true,
                 width: 100,
             }, {
-                field: 'fujia',
-                title: '副驾',
-                align: 'center',
-                sortable: true,
-                width: 100,
-            }, {
-                field: 'ruchang',
-                title: '装货点',
-                align: 'center',
-                sortable: true,
-                width: 100,
-            }, {
-                field: 'chuchang',
-                title: '卸货点',
+                field: 'shoufeizhan',
+                title: '装卸地点',
                 align: 'center',
                 sortable: true,
                 width: 100,

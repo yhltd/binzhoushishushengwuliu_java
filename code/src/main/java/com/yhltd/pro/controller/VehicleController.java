@@ -74,6 +74,23 @@ public class VehicleController {
     }
 
     /**
+     * 下拉
+     *
+     * @return ResultInfo
+     */
+    @RequestMapping("/getChepai")
+    public ResultInfo getChepai() {
+        try {
+            List<Vehicle> getList = vehicleService.getChepai();
+            return ResultInfo.success("获取成功", getList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("获取失败：{}", e.getMessage());
+            return ResultInfo.error("错误！");
+        }
+    }
+
+    /**
      * 查询
      *
      * @return ResultInfo

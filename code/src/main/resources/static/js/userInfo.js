@@ -28,10 +28,10 @@ function getPower(id) {
         if (res.code == 200) {
             setPowerTable(res.data);
             for (var i = 0; i < res.data.length; i++) {
-                $('#add'+res.data[i].id).val(res.data[i].add);
-                $('#del'+res.data[i].id).val(res.data[i].del);
-                $('#upd'+res.data[i].id).val(res.data[i].upd);
-                $('#sel'+res.data[i].id).val(res.data[i].sel);
+                $('#add' + res.data[i].id).val(res.data[i].add);
+                $('#del' + res.data[i].id).val(res.data[i].del);
+                $('#upd' + res.data[i].id).val(res.data[i].upd);
+                $('#sel' + res.data[i].id).val(res.data[i].sel);
             }
             $('#show-power-modal').modal('show');
         }
@@ -224,16 +224,18 @@ function setTable(data) {
         classes: 'table table-hover text-nowrap table table-bordered',
         idField: 'id',
         pagination: true,
-        pageSize: 20,//单页记录数
-        clickToSelect: true,
+        pageSize: 50,//单页记录数
+        //clickToSelect: true,
         locale: 'zh-CN',
         toolbar: '#table-toolbar',
         toolbarAlign: 'left',
         theadClasses: "thead-light",//这里设置表头样式
         style: 'table-layout:fixed',
-        height: document.body.clientHeight * 0.85,
+        height: document.body.clientHeight * 0.93,
         columns: [
             {
+                checkbox: true,
+            }, {
                 field: '',
                 title: '序号',
                 align: 'center',
@@ -282,14 +284,14 @@ function setTable(data) {
                 }
             }
         ],
-        onClickRow: function (row, el) {
-            let isSelect = $(el).hasClass('selected');
-            if (isSelect) {
-                $(el).removeClass('selected')
-            } else {
-                $(el).addClass('selected')
-            }
-        }
+        // onClickRow: function (row, el) {
+        //     let isSelect = $(el).hasClass('selected');
+        //     if (isSelect) {
+        //         $(el).removeClass('selected')
+        //     } else {
+        //         $(el).addClass('selected')
+        //     }
+        // }
     })
 }
 
@@ -381,7 +383,7 @@ function getRows(el) {
             del: del,
             upd: upd,
             sel: sel,
-            data: tableData[index-2]
+            data: tableData[index - 2]
         })
     });
     return result;

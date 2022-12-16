@@ -14,7 +14,7 @@ import java.util.List;
 public interface ShujvService extends IService<Shujv> {
     List<Shujv> getList();
 
-    List<Shujv> queryList(String ks,String js,String chetou);
+    List<Shujv> queryList(String ks, String js, String chetou);
 
     Shujv add(Shujv shujv);
 
@@ -22,5 +22,13 @@ public interface ShujvService extends IService<Shujv> {
 
     boolean delete(List<Integer> idList);
 
-    List<Shujv> getSalary(String ks,String js,String name);
+    List<Shujv> getSalary(String ks, String js, String name);
+
+    List<Shujv> getChetou();
+
+    boolean fileUp(String column, int id, String value);
+
+    boolean fileDel(String column, int id);
+
+    List<Shujv> getListById(int id);
 }

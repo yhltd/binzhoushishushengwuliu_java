@@ -14,6 +14,8 @@ import java.util.List;
 public interface VehicleService extends IService<Vehicle> {
     List<Vehicle> getList();
 
+    List<Vehicle> getChepai();
+
     List<Vehicle> queryList(String chepai);
 
     Vehicle add(Vehicle vehicle);

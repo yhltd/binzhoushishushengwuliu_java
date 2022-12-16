@@ -67,4 +67,12 @@ public class Vehicle {
     private String remarks;
     private String filepath;
     private String filename;
+
+    private String type;
+
+    private String qian;
+    private String hou;
+    private String chang;
+    private String kuan;
+    private String gao;
 }
